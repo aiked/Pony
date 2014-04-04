@@ -1,4 +1,4 @@
 Pony
 ====
 
-A modern search engine for textiles, an awesome pony.
+A modern search engine for last famous words, the awesome pony.
