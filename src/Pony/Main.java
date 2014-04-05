@@ -13,23 +13,16 @@ import java.io.IOException;
  *
  * @author jit
  */
-public class Search {
+public class Main {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
         
-        //StopWords WordsGR = new StopWords("./Resources/stopwordsGr.txt", "Greek");
-        //StopWords WordsEN = new StopWords("./Resources/stopwordsEn.txt", "English");
         
-        //WordsGR.PrintWords();
-        //WordsEN.PrintWords();
         
-        DocumentHolder DocHolder = DocumentHolder.getInstance();
         
-        DocHolder.ReadFilesFromFolder("./Resources");
-        DocHolder.PrintMap();
     }
     
 }

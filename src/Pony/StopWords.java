@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package Pony;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  *
@@ -19,78 +12,70 @@ import java.util.Map;
  */
 public class StopWords {
     
-    private String language;
-    private String path;
+    private static StopWords instance = null;
+    
     private HashSet<String> words;
     
-    public StopWords(){
-        this.language   = null;
-        this.path       = null;
+    private StopWords(){
         this.words      = new HashSet<String>();
     }
-    
-    public StopWords( String path, String language ) throws IOException{
-        
-        this.words = new HashSet<>();
-        this.language   = language;
-        this.path       = path;
-        
-        try{
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(path), "UTF-8"))) {
 
-                String line;
-                
-                while ((line = br.readLine()) != null) {
-                    this.words.add(line);
+    public static StopWords getInstance(){
+        if(instance==null){
+            instance = new StopWords();
+        }
+        return instance;
+    }
+
+    public void importFromFile( String path ){
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader( 
+                    new FileInputStream(path), "UTF-8"));
+
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                words.add(line);
+            }   
+        }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
+    }
+        
+    public void importFromFolder( String path ){
+        try{
+            File folder = new File(path);
+            for ( File fp : folder.listFiles()){
+                if(fp.isDirectory()){
+                    importFromFolder(fp.toString());
+                }
+                else{
+                    importFromFile(fp.getCanonicalPath());
                 }
             }
-        }catch ( IOException e){ System.err.println("Error: "+e.getMessage()); }
+        }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
     }
     
-    public String   getLanguage() {
-        return language;
-    }
-    public void     setLanguage(String language) {
-        this.language = language;
+    public Boolean existWord( String word ){
+        return words.contains(word);
     }
     
-    public String   getPath() {
-        return path;
-    }
-    public void     setPath(String path) {
-        this.path = path;
-    }
-
-    public Boolean  findWord( String word){
-        return this.words.contains(word);
-    }
-    
-    public Boolean ReadFromFile( String path ) throws IOException{
-        try{
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(path), "UTF-8"))) {
-
-                String line;
-                
-                while ((line = br.readLine()) != null) {
-                    this.words.add(line);
-                }
-            }
-            return true;
-        }catch ( IOException e){ System.err.println("Error: "+e.getMessage()); }
-        
-        return false;
+    public String getValidTerm( String word ){
+        if(words.contains(word)){
+            return null;
+        }
+        else if(word.replaceAll("[][(){},.;!?<>%]", "").matches("\"[0-9]+\"")){
+            return null;
+        }
+        return word;
     }
     
-    public void PrintWords(){
-        System.out.println("\nFilepath: "+this.path);
-        System.out.println("Language: "+this.language);
-        System.out.println("Size: "+this.words.size());
-        for ( String s : this.words){
+    public int getSize(){
+        return words.size();
+    }
+    
+    public void printWords(){
+        System.out.println("\nStopWords | Size: "+words.size());
+        for ( String s : words ){
             System.out.println(s);
         }
     }
-    
-    
 }
