@@ -1,5 +1,5 @@
 
-package Pony;
+package PonyIndexer;
 
 import java.util.HashMap;
 import java.util.List;

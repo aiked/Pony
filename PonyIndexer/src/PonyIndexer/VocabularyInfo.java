@@ -1,4 +1,4 @@
-package Pony;
+package PonyIndexer;
 
 /**
  *

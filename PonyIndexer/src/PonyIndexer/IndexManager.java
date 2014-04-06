@@ -1,5 +1,5 @@
 
-package Pony;
+package PonyIndexer;
 
 import java.io.BufferedReader;
 import java.io.File;
