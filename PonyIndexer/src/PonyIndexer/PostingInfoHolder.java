@@ -22,4 +22,8 @@ public class PostingInfoHolder {
     public PostingInfo get( Long id ){
         return infoMap.get(id);
     }
+    
+    public HashMap<Long,PostingInfo> getMap(){
+        return infoMap;
+    }
 }
