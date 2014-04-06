@@ -20,9 +20,17 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         
+
+        IndexManager index = IndexManager.getInstance();
         
+        //StopWords words = StopWords.getInstance();
+        //words.importFromFolder("./resources/stopWords");
+        //words.printWords();
         
-        
-    }
+        index.indexer(  "./resources/documentCollection",
+                        "./resources/stopWords",
+                        "undefined");
+    
+        }
     
 }
