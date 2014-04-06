@@ -17,6 +17,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 /**
  *
  * @author Apostolidis
@@ -30,7 +31,7 @@ public class HtmlPageFetcher {
             InputStream pageAsStream = urlHolder.openStream();
             BufferedReader pageAsCharBuffer = new BufferedReader(new InputStreamReader(pageAsStream, "UTF-8"));
             String pageAsString = Utilities.charBufferToString( pageAsCharBuffer );
-            String extension = Utilities.getUrlExtension(url);
+            String extension = Common.Utilities.getUrlExtension(url);
             Document htmlDom = Jsoup.parse(pageAsString);
             if( htmlDom!=null ){
                 ArrayList<String> links = extractLinksFromDom(htmlDom);

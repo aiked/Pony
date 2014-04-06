@@ -1,11 +1,13 @@
 
 package PonyIndexer;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jit
  */
-public class DocumentInfo {
+public class DocumentInfo implements Serializable {
     
     private Long     id;
     private String  path;

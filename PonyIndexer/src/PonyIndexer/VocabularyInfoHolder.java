@@ -1,13 +1,14 @@
 
 package PonyIndexer;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author jit
  */
-public class VocabularyInfoHolder {
+public class VocabularyInfoHolder  implements Serializable {
 
     private static VocabularyInfoHolder instance = null;
     private HashMap<String, VocabularyInfo> vocMap;
