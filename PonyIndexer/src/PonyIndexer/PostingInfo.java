@@ -26,6 +26,12 @@ public class PostingInfo {
         positions = new ArrayList<>();
         positions.add(position);
     }
+    
+     public PostingInfo(Long id, Double tf){
+        this.id = id;
+        this.tf = tf;
+        positions = new ArrayList<>();
+    }
 
     public void addPosition(Long position){
         positions.add(position);

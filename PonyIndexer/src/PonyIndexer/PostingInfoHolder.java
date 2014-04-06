@@ -1,14 +1,13 @@
 
 package PonyIndexer;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author jit
  */
-public class PostingInfoHolder implements Serializable {
+public class PostingInfoHolder {
 
     private HashMap<Long,PostingInfo> infoMap;
     
@@ -22,5 +21,9 @@ public class PostingInfoHolder implements Serializable {
     
     public PostingInfo get( Long id ){
         return infoMap.get(id);
+    }
+    
+    public HashMap<Long,PostingInfo> getMap(){
+        return infoMap;
     }
 }
