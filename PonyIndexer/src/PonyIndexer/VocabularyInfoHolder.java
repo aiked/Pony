@@ -40,4 +40,8 @@ public class VocabularyInfoHolder  implements Serializable {
     public int getSize(){
         return vocMap.size();
     }
+    
+    public HashMap<String, VocabularyInfo> getMap(){
+        return vocMap;
+    }
 }

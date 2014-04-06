@@ -1,4 +1,4 @@
 Pony
 ====
 
-A modern search engine for last famous words, the awesome pony.
+A modern search engine for famous last words, the awesome pony.

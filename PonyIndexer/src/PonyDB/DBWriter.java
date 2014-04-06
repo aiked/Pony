@@ -57,7 +57,7 @@ public class DBWriter {
     }
      
     public long saveNextPostingInfoHolder( PostingInfoHolder postingInfoHolder ) throws IOException{
-        HashMap<Long, PostingInfo> map = postingInfoHolder.getMap();
+        HashMap<Long, PostingInfo> map = postingInfoHolder.getAllInfo();
         this.PostingInfoFile.writeInt(map.size());
         for(Entry<Long, PostingInfo> entry : map.entrySet()) {
             this.PostingInfoFile.writeLong(entry.getKey());

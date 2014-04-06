@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -48,10 +49,7 @@ public class IndexManager {
         
         ReadFilesPathFromFolder(fileList, ResourcesFolder);
                 
-        for(int i=0;i<fileList.size();i++){
-            System.out.println(fileList.get(i));
-        } 
-        
+       
         for ( String fileName : fileList ){
             
             docHolder.add(cntFile, new DocumentInfo(cntFile, fileName));
@@ -59,7 +57,7 @@ public class IndexManager {
             cntWord = 0L;
             
             BufferedReader reader = null; StringTokenizer tokenizer = null;
-            String delimiter = "\t\n\r\f";
+            String delimiter = "\t\n\r\f ";
             String line = null, currentToken = null;
             
             reader = new BufferedReader(new FileReader(fileName));
@@ -68,7 +66,8 @@ public class IndexManager {
                 tokenizer = new StringTokenizer(line, delimiter);
                 while(tokenizer.hasMoreTokens() ) {
                     ++cntWord;
-                    currentToken = tokenizer.nextToken();
+                    currentToken = tokenizer.nextToken().toLowerCase();
+                    indexTerm(currentToken, fileName, cntFile, cntWord);
                 }
             }
         } 
@@ -81,10 +80,10 @@ public class IndexManager {
         
         term = stopWords.getValidTerm(term);
         
+        
         if(term == null){
             return;
         }
-        
         VocabularyInfo vocInfo = vocHolder.get(term);
         if(vocInfo == null){
             
@@ -125,4 +124,45 @@ public class IndexManager {
         }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
     }
     
+   /* -------- Debug, to be removed -------------*/
+    
+    public int getVocabularySize(){
+        return vocHolder.getSize();
+    }
+    
+    public void printAllTerms(){
+        vocHolder = VocabularyInfoHolder.getInstance();
+        
+        for( String i : vocHolder.getMap().keySet()){
+            System.out.println(i);
+        }
+    }
+        
+    public void f00( String term ){
+        docHolder = DocumentInfoHolder.getInstance();
+        vocHolder = VocabularyInfoHolder.getInstance();
+        
+        VocabularyInfo vocInfo = vocHolder.get(term);
+        PostingInfoHolder postHolder = vocInfo.getPostHolder();
+        
+        System.out.println( "Vocabulary Info" +
+                            "\t Term: "+vocInfo.getTerm() +
+                            "\t df: "+vocInfo.getDf());
+        
+        HashMap<Long,PostingInfo> postInfoMap = postHolder.getAllInfo();
+              
+        for( Long i : postInfoMap.keySet()){
+            
+            PostingInfo postInfo = postInfoMap.get(i);
+            DocumentInfo docInfo = docHolder.get(postInfo.getId());
+            ArrayList<Long> docPositions = postInfo.getPositions();
+            
+            System.out.println("\n\tPath:"+docInfo.getPath());
+            for( Long pos : docPositions){
+                System.out.println("\t\t"+pos);
+            }
+            
+        }
+                            
+    }
 }

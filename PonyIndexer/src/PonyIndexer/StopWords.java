@@ -62,9 +62,12 @@ public class StopWords {
         if(words.contains(word)){
             return null;
         }
-        else if(word.replaceAll("[][(){},.;!?<>%]", "").matches("\"[0-9]+\"")){
+        word = word.replaceAll("[(){}[,.]\'\";!:_?—<\\->]", "");
+        
+        if(word.matches("\\d+")){
             return null;
         }
+        
         return word;
     }
     

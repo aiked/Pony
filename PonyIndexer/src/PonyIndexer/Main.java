@@ -22,15 +22,17 @@ public class Main {
         
 
         IndexManager index = IndexManager.getInstance();
-        
-        //StopWords words = StopWords.getInstance();
-        //words.importFromFolder("./resources/stopWords");
-        //words.printWords();
+       
         
         index.indexer(  "./resources/documentCollection",
                         "./resources/stopWords",
                         "undefined");
+        
+        System.out.println(index.getVocabularySize());
+        index.printAllTerms();
     
         }
+    
+        
     
 }

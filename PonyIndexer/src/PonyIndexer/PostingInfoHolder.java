@@ -23,7 +23,7 @@ public class PostingInfoHolder {
         return infoMap.get(id);
     }
     
-    public HashMap<Long,PostingInfo> getMap(){
+    public HashMap<Long,PostingInfo> getAllInfo(){
         return infoMap;
     }
 }
