@@ -22,20 +22,14 @@ import java.io.RandomAccessFile;
  * @author Apostolidis
  */
 public class DBReader {
-    private static DBReader instance = null;
-    
+
     private String openPath;
     private RandomAccessFile DocumentInfoFile;
     private RandomAccessFile PostingInfoFile;
     
-    private DBReader(){}
-    
-    public static DBReader getInstance(){
-        if(instance==null){
-            instance = new DBReader();
-        }
-        return instance;
+    public DBReader(){
     }
+    
     
     public void openConnections(String path) throws FileNotFoundException, IOException{
         this.openPath = path;

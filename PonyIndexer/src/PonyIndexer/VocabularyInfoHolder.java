@@ -24,6 +24,11 @@ public class VocabularyInfoHolder  implements Serializable {
         return instance;
     }
     
+    // when you load the instance from file
+    public static void setInstance(VocabularyInfoHolder singleInstance){
+        instance = singleInstance;
+    }
+    
     public VocabularyInfo get(String term){
         return vocMap.get(term);
     }
