@@ -15,9 +15,6 @@ import java.io.IOException;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) throws IOException {
         
 
@@ -29,7 +26,7 @@ public class Main {
                         "undefined");
         
         System.out.println(index.getVocabularySize());
-        index.printAllTerms();
+        //index.printAllTerms();
     
         }
     

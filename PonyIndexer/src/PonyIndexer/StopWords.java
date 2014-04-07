@@ -17,7 +17,7 @@ public class StopWords {
     private HashSet<String> words;
     
     private StopWords(){
-        this.words      = new HashSet<String>();
+        this.words = new HashSet<String>();
     }
 
     public static StopWords getInstance(){

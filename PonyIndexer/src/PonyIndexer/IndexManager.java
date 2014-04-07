@@ -8,7 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -44,7 +46,7 @@ public class IndexManager {
         stopWords.importFromFolder(StopWordsFolder);
         
         List<String> fileList = new ArrayList<>();
-        Long cntFile = 0L;
+        Long cntDocument = 0L;
         Long cntWord = 0L;
         
         ReadFilesPathFromFolder(fileList, ResourcesFolder);
@@ -52,39 +54,45 @@ public class IndexManager {
        
         for ( String fileName : fileList ){
             
-            docHolder.add(cntFile, new DocumentInfo(cntFile, fileName));
-            ++cntFile;
+            docHolder.add(cntDocument, new DocumentInfo(cntDocument, fileName));
+            ++cntDocument;
             cntWord = 0L;
             
             BufferedReader reader = null; StringTokenizer tokenizer = null;
             String delimiter = "\t\n\r\f ";
-            String line = null, currentToken = null;
+            String line = null, term = null;
+            HashSet<String> documentWords = new HashSet<>();
             
             reader = new BufferedReader(new FileReader(fileName));
             
             while ((line = reader.readLine()) != null){
                 tokenizer = new StringTokenizer(line, delimiter);
                 while(tokenizer.hasMoreTokens() ) {
+                    
                     ++cntWord;
-                    currentToken = tokenizer.nextToken().toLowerCase();
-                    indexTerm(currentToken, fileName, cntFile, cntWord);
+                    term = stopWords.getValidTerm(tokenizer.nextToken().toLowerCase());
+                    
+                    if(term != null){
+                        
+                        indexTerm(documentWords, term, fileName, cntDocument, cntWord);
+                    }
+                
                 }
             }
+            calculateTf(documentWords, cntDocument);
         } 
-                
+        calculateDf();
     }
     
     
-    public void indexTerm( String term, String filePath,
+    public void indexTerm( HashSet<String> documentWords,
+                            String term, String filePath,
                             Long fileIndex, Long wordIndex ){
         
-        term = stopWords.getValidTerm(term);
-        
-        
-        if(term == null){
-            return;
-        }
         VocabularyInfo vocInfo = vocHolder.get(term);
+        
+        documentWords.add(term);
+        
         if(vocInfo == null){
             
             vocInfo  = new VocabularyInfo(term);
@@ -106,6 +114,32 @@ public class IndexManager {
     }
     
     
+    public void calculateDf(){
+        for ( String term : vocHolder.getMap().keySet()){
+            VocabularyInfo vocInfo = vocHolder.get(term);
+            vocInfo.setDf( ((long)(vocInfo.getPostHolder().getAllInfo().size())));
+        }
+    }
+    
+
+    public void calculateTf(HashSet<String> words, Long docId){
+        
+        ArrayList<PostingInfo> docs = new ArrayList<>();
+        Long maxfreq = 0L;
+        PostingInfo postInfo = null;
+        
+        for ( String word : words){
+            postInfo = vocHolder.get(word).getPostHolder().get(docId);
+            maxfreq =  Math.max( maxfreq, ((long)(postInfo.getPositions().size())));
+            docs.add(postInfo);
+        }
+        
+        for ( PostingInfo postDoc : docs){
+            postDoc.setTf(((double) (postDoc.getPositions().size() / maxfreq)));
+        }
+    }
+            
+            
     public void ReadFilesPathFromFolder(    List<String> fileList,
                                                     String path ){
         
