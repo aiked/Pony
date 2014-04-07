@@ -129,7 +129,7 @@ public class IndexManager {
         PostingInfo postInfo = null;
         
         for ( String word : words){
-            postInfo = vocHolder.get(word).getPostHolder().get(docId);
+            postInfo = vocHolder.get(word).getPostInfoByDocId(docId);
             maxfreq =  Math.max( maxfreq, ((long)(postInfo.getPositions().size())));
             docs.add(postInfo);
         }

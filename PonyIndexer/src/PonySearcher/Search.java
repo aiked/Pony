@@ -29,12 +29,13 @@ public class Search {
         
         for(String term : parsedQuery){
             VocabularyInfo vocabularyInfo = vocabularyInfoHolder.get(term);
-            assert( vocabularyInfo.getPostHolder()==null );
-           if( vocabularyInfo!=null ){
+            
+            if( vocabularyInfo!=null ){
+                assert( vocabularyInfo.getPostHolder()==null );
                 PostingInfoHolder postingInfoHolder = 
                         dbReader.loadPostingInfoHolder(vocabularyInfo.getPointer());
-                
-           }
+
+            }
         }
         
         //collect the list of list<Vocabulary, info>

@@ -57,7 +57,7 @@ public class VocabularyInfo {
         this.postHolder = postHolder;
     }
     
-    public PostingInfo getPostInfoBiDocId(long docId){
+    public PostingInfo getPostInfoByDocId(long docId){
         return postHolder.get(docId);
     }
 
