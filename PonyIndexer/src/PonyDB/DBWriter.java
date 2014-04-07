@@ -38,10 +38,11 @@ public class DBWriter {
         return instance;
     }
     
-    public void openConnections(String path) throws FileNotFoundException, IOException{
+    public void openConnections(String path) throws FileNotFoundException, 
+                                                    IOException{
         this.openPath = path;
-        this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "w");
-        this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "w");
+        this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "rw");
+        this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "rw");
     }
     
     public void closeConnections() throws IOException{
@@ -49,14 +50,17 @@ public class DBWriter {
         this.PostingInfoFile.close();
     }
         
-    public long saveNextDocumentInfo( DocumentInfo documentInfo ) throws IOException{
+    public long saveNextDocumentInfo( DocumentInfo documentInfo ) 
+                                            throws IOException{
         this.DocumentInfoFile.writeLong(documentInfo.getId());
         this.DocumentInfoFile.writeUTF(documentInfo.getPath());
         this.DocumentInfoFile.writeUTF(documentInfo.getType());
+        this.DocumentInfoFile.writeLong(documentInfo.getTotalTerm());
         return this.DocumentInfoFile.getFilePointer();
     }
      
-    public long saveNextPostingInfoHolder( PostingInfoHolder postingInfoHolder ) throws IOException{
+    public long saveNextPostingInfoHolder( PostingInfoHolder postingInfoHolder ) 
+                                            throws IOException{
         HashMap<Long, PostingInfo> map = postingInfoHolder.getAllInfo();
         this.PostingInfoFile.writeInt(map.size());
         for(Entry<Long, PostingInfo> entry : map.entrySet()) {
@@ -64,6 +68,7 @@ public class DBWriter {
             PostingInfo value = entry.getValue();
             this.PostingInfoFile.writeLong(value.getId());
             this.PostingInfoFile.writeDouble(value.getTf());
+            this.PostingInfoFile.writeDouble(value.getVectorSpaceW());
             ArrayList<Long> positions = value.getPositions();
             this.PostingInfoFile.writeInt(positions.size());
             for( Long pos : positions ){
@@ -73,7 +78,8 @@ public class DBWriter {
         return this.PostingInfoFile.getFilePointer();
     }
     
-    public void saveVocabularyInfoHolder( VocabularyInfoHolder vocabularyInfoHolder ) throws FileNotFoundException, IOException{
+    public void saveVocabularyInfoHolder( VocabularyInfoHolder vocabularyInfoHolder ) 
+                        throws FileNotFoundException, IOException{
         OutputStream vocFile = new FileOutputStream(this.openPath + Configuration.VOCABULARY_HOLDER_NAME);
         OutputStream vocBuffer = new BufferedOutputStream(vocFile);
         ObjectOutputStream vocabularyInfoHolderFile = new ObjectOutputStream(vocBuffer);

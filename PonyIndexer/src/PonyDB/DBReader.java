@@ -9,6 +9,7 @@ import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfoHolder;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
+import java.util.List;
 
 /**
  *
@@ -47,7 +49,8 @@ public class DBReader {
         Long id = this.DocumentInfoFile.readLong();
         String path = this.DocumentInfoFile.readUTF();
         String type = this.DocumentInfoFile.readUTF();
-        return new DocumentInfo(id, path);
+        Long totalTerm = this.DocumentInfoFile.readLong();
+        return new DocumentInfo(id, path, totalTerm);
     }
     
     public PostingInfoHolder loadPostingInfoHolder( long pointer ) throws IOException{
@@ -75,5 +78,24 @@ public class DBReader {
         ObjectInput vocObject = new ObjectInputStream (vocBuffer);
         VocabularyInfoHolder vocabularyInfoHolder = (VocabularyInfoHolder) vocObject.readObject();
         return vocabularyInfoHolder;
+    }
+    
+    public static void ReadFilesPathFromFolder(List<String> fileList,
+                                        String path ){
+        
+        try{
+            File folder = new File(path);
+            
+            for( File fp : folder.listFiles() ){
+                if(fp.isDirectory()){
+                    ReadFilesPathFromFolder(fileList, fp.toString());
+                }
+                else{
+                    fileList.add(fp.getPath());
+                }
+            }
+            
+            
+        }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
     }
 }

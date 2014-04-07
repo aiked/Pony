@@ -1,6 +1,8 @@
 
 package PonyIndexer;
 
+import PonyDB.*;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +21,6 @@ import java.util.StringTokenizer;
  */
 public class IndexManager {
 
-    private static DocumentInfoHolder docHolder     = null;
     private static VocabularyInfoHolder vocHolder   = null;
     private static StopWords stopWords              = null;
     
@@ -40,22 +41,25 @@ public class IndexManager {
                                                         IOException {
         
         stopWords = StopWords.getInstance();
-        docHolder = DocumentInfoHolder.getInstance();
         vocHolder = VocabularyInfoHolder.getInstance();
         
         stopWords.importFromFolder(StopWordsFolder);
         
         List<String> fileList = new ArrayList<>();
+        DocumentInfo currDocumentInfo = null;
+        
         Long cntDocument = 0L;
         Long cntWord = 0L;
         
-        ReadFilesPathFromFolder(fileList, ResourcesFolder);
-                
-       
+        DBWriter DBWriterInstance = PonyDB.DBWriter.getInstance();
+        DBWriterInstance.openConnections(StorageFolder);
+        
+        DBReader.ReadFilesPathFromFolder(fileList, ResourcesFolder);
+        
+        vocHolder.setNumberOfDocuments((long)(fileList.size()));
+        
         for ( String fileName : fileList ){
             
-            docHolder.add(cntDocument, new DocumentInfo(cntDocument, fileName));
-            ++cntDocument;
             cntWord = 0L;
             
             BufferedReader reader = null; StringTokenizer tokenizer = null;
@@ -76,12 +80,30 @@ public class IndexManager {
                         
                         indexTerm(documentWords, term, fileName, cntDocument, cntWord);
                     }
-                
                 }
             }
+            reader.close();
+
+            currDocumentInfo = new DocumentInfo(cntDocument, fileName, cntWord);
             calculateTf(documentWords, cntDocument);
+            
+            
+            cntDocument = DBWriterInstance.saveNextDocumentInfo(currDocumentInfo);
+            
         } 
         calculateDf();
+        
+        for ( String term : vocHolder.getMap().keySet()){
+            VocabularyInfo vocInfo =  vocHolder.get(term);
+            
+            Long filePointer = DBWriterInstance.saveNextPostingInfoHolder
+                                                    (vocInfo.getPostHolder());
+            vocInfo.setPointer(filePointer);
+            vocInfo.setPostHolder(null);
+        }
+        DBWriterInstance.saveVocabularyInfoHolder(vocHolder);
+        
+        DBWriterInstance.closeConnections();
     }
     
     
@@ -115,9 +137,20 @@ public class IndexManager {
     
     
     public void calculateDf(){
+        
+        Double base2 = Math.log(2);
+        Long N = vocHolder.getNumberOfDocuments();
+        
         for ( String term : vocHolder.getMap().keySet()){
             VocabularyInfo vocInfo = vocHolder.get(term);
-            vocInfo.setDf( ((long)(vocInfo.getPostHolder().getAllInfo().size())));
+            vocInfo.setDf((long)(vocInfo.getPostHolder().getAllInfo().size()));
+            vocInfo.setIdf((double)(Math.log((N/vocInfo.getDf()))/base2));
+            
+            PostingInfoHolder postHolder = vocInfo.getPostHolder();
+            for( Long id : postHolder.getAllInfo().keySet()){
+                PostingInfo postInfo = postHolder.get(id);
+                postInfo.setVectorSpaceW(vocInfo.getIdf()*postInfo.getTf());
+            }
         }
     }
     
@@ -138,65 +171,5 @@ public class IndexManager {
             postDoc.setTf(((double) (postDoc.getPositions().size() / maxfreq)));
         }
     }
-            
-            
-    public void ReadFilesPathFromFolder(    List<String> fileList,
-                                                    String path ){
-        
-        try{
-            File folder = new File(path);
-            
-            for( File fp : folder.listFiles() ){
-                if(fp.isDirectory()){
-                    ReadFilesPathFromFolder(fileList, fp.toString());
-                }
-                else{
-                    fileList.add(fp.getPath());
-                }
-            }
-            
-        }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
-    }
     
-   /* -------- Debug, to be removed -------------*/
-    
-    public int getVocabularySize(){
-        return vocHolder.getSize();
-    }
-    
-    public void printAllTerms(){
-        vocHolder = VocabularyInfoHolder.getInstance();
-        
-        for( String i : vocHolder.getMap().keySet()){
-            System.out.println(i);
-        }
-    }
-        
-    public void f00( String term ){
-        docHolder = DocumentInfoHolder.getInstance();
-        vocHolder = VocabularyInfoHolder.getInstance();
-        
-        VocabularyInfo vocInfo = vocHolder.get(term);
-        PostingInfoHolder postHolder = vocInfo.getPostHolder();
-        
-        System.out.println( "Vocabulary Info" +
-                            "\t Term: "+vocInfo.getTerm() +
-                            "\t df: "+vocInfo.getDf());
-        
-        HashMap<Long,PostingInfo> postInfoMap = postHolder.getAllInfo();
-              
-        for( Long i : postInfoMap.keySet()){
-            
-            PostingInfo postInfo = postInfoMap.get(i);
-            DocumentInfo docInfo = docHolder.get(postInfo.getId());
-            ArrayList<Long> docPositions = postInfo.getPositions();
-            
-            System.out.println("\n\tPath:"+docInfo.getPath());
-            for( Long pos : docPositions){
-                System.out.println("\t\t"+pos);
-            }
-            
-        }
-                            
-    }
 }

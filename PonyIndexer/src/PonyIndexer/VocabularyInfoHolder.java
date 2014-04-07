@@ -11,7 +11,9 @@ import java.util.HashMap;
 public class VocabularyInfoHolder  implements Serializable {
 
     private static VocabularyInfoHolder instance = null;
+    
     private HashMap<String, VocabularyInfo> vocMap;
+    private Long NumberOfDocuments;
     
     public VocabularyInfoHolder(){
         vocMap = new HashMap<>();
@@ -39,6 +41,18 @@ public class VocabularyInfoHolder  implements Serializable {
     
     public int getSize(){
         return vocMap.size();
+    }
+
+    public HashMap<String, VocabularyInfo> getVocMap() {
+        return vocMap;
+    }
+
+    public Long getNumberOfDocuments() {
+        return NumberOfDocuments;
+    }
+
+    public void setNumberOfDocuments(Long NumberOfDocuments) {
+        this.NumberOfDocuments = NumberOfDocuments;
     }
     
     public HashMap<String, VocabularyInfo> getMap(){
