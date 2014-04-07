@@ -56,6 +56,10 @@ public class VocabularyInfo {
     public void setPostHolder(PostingInfoHolder postHolder) {
         this.postHolder = postHolder;
     }
+    
+    public PostingInfo getPostInfoBiDocId(long docId){
+        return postHolder.get(docId);
+    }
 
     public Long getPointer() {
         return pointer;

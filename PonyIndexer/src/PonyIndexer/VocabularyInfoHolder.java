@@ -13,7 +13,7 @@ public class VocabularyInfoHolder  implements Serializable {
     private static VocabularyInfoHolder instance = null;
     private HashMap<String, VocabularyInfo> vocMap;
     
-    private VocabularyInfoHolder(){
+    public VocabularyInfoHolder(){
         vocMap = new HashMap<>();
     }
     
