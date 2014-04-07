@@ -28,3 +28,6 @@ nbactions.xml
 nb-configuration.xml
 build.xml
 manifest.mf
+
+# Project specific folders
+collectionIndex/

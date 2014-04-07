@@ -1,13 +1,16 @@
 package PonyIndexer;
 
+import java.io.Serializable;
+
 /**
  *
  * @author jit
  */
-public class VocabularyInfo {
+public class VocabularyInfo implements Serializable {
     
     private String  term;
     private Long    df;
+    private Double  idf;
     private PostingInfoHolder postHolder;
     private Long    pointer;
     
@@ -47,6 +50,14 @@ public class VocabularyInfo {
 
     public void setDf(Long df) {
         this.df = df;
+    }
+
+    public Double getIdf() {
+        return idf;
+    }
+
+    public void setIdf(Double idf) {
+        this.idf = idf;
     }
 
     public PostingInfoHolder getPostHolder() {

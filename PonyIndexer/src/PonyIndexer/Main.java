@@ -23,10 +23,8 @@ public class Main {
         
         index.indexer(  "./resources/documentCollection",
                         "./resources/stopWords",
-                        "undefined");
-        
-        System.out.println(index.getVocabularySize());
-        //index.printAllTerms();
+                        "./resources/CollectionIndex/");
+ 
     
         }
     

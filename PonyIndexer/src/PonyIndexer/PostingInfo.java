@@ -1,16 +1,18 @@
 
 package PonyIndexer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author jit
  */
-public class PostingInfo {
+public class PostingInfo implements Serializable{
 
     private Long id;
     private Double tf;
+    private Double vectorSpaceW;
     private ArrayList<Long> positions;
     
     public PostingInfo(){
@@ -53,6 +55,14 @@ public class PostingInfo {
         this.tf = tf;
     }
 
+    public Double getVectorSpaceW() {
+        return vectorSpaceW;
+    }
+
+    public void setVectorSpaceW(Double vectorSpaceW) {
+        this.vectorSpaceW = vectorSpaceW;
+    }
+    
     public ArrayList<Long> getPositions() {
         return positions;
     }
