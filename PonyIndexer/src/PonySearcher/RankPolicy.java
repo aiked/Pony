@@ -1,5 +1,7 @@
 package PonySearcher;
 
+import PonyIndexer.VocabularyInfoHolder;
+
 
 /**
  *
@@ -7,6 +9,10 @@ package PonySearcher;
  */
 public interface RankPolicy {
 
-    public PageRankInfo Rank();
+    public PageRankInfo Rank(
+            VocabularyInfoHolder VocabularyInfoHolder, 
+            Document doc, 
+            Document query
+    );
     
 }
