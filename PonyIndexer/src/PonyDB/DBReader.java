@@ -87,6 +87,10 @@ public class DBReader {
         return new RandomAccessFile(path, "r");
     }
     
+    public void closeDocument(RandomAccessFile file) throws IOException{
+        file.close();
+    }
+    
     private static void ReadFilesPathFromFolder(
                                         List<String> fileList,
                                         String path ){
