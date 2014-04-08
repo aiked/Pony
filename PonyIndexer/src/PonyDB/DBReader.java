@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,8 +63,10 @@ public class DBReader {
             long id = this.PostingInfoFile.readLong();
             assert(key==id);
             double tf = this.PostingInfoFile.readDouble();
+            double w = this.PostingInfoFile.readDouble();
             int positionsSize = this.PostingInfoFile.readInt();
             PostingInfo postingInfo = new PostingInfo(id, tf);
+            postingInfo.setVectorSpaceW(w);
             for(int j=0; j<positionsSize; ++j){
                 postingInfo.addPosition(this.PostingInfoFile.readLong());
             }
@@ -80,12 +83,11 @@ public class DBReader {
         return vocabularyInfoHolder;
     }
     
-    public static void ReadFilesPathFromFolder(List<String> fileList,
+    private static void ReadFilesPathFromFolder(
+                                        List<String> fileList,
                                         String path ){
-        
-        try{
+         try{
             File folder = new File(path);
-            
             for( File fp : folder.listFiles() ){
                 if(fp.isDirectory()){
                     ReadFilesPathFromFolder(fileList, fp.toString());
@@ -94,8 +96,11 @@ public class DBReader {
                     fileList.add(fp.getPath());
                 }
             }
-            
-            
         }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
+    }
+    public static ArrayList<String> ReadFilesPathFromFolder( String path ){
+        ArrayList<String> files = new ArrayList<>();
+        ReadFilesPathFromFolder(files, path);
+        return files;
     }
 }

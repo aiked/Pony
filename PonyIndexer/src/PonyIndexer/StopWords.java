@@ -11,20 +11,10 @@ import java.util.HashSet;
  * @author jit
  */
 public class StopWords {
-    
-    private static StopWords instance = null;
-    
     private HashSet<String> words;
     
-    private StopWords(){
-        this.words = new HashSet<String>();
-    }
-
-    public static StopWords getInstance(){
-        if(instance==null){
-            instance = new StopWords();
-        }
-        return instance;
+    public StopWords(){
+        this.words = new HashSet();
     }
 
     public void importFromFile( String path ){
