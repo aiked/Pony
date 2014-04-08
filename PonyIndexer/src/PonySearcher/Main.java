@@ -6,9 +6,10 @@
 
 package PonySearcher;
 
+import PonyDB.DBReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.PriorityQueue;
+import java.io.RandomAccessFile;
 
 /**
  *
@@ -18,6 +19,11 @@ public class Main {
     
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, Exception{
         
+        DBReader db = new DBReader();
+        RandomAccessFile file = db.loadDocument("./resources/documentCollection/bigger/Discoverers and Explorers.txt");
+        System.out.println( SnippetGenerator.SnippetGenerator( file, "land", 5941L));
+        
+        /*
         Search search = new Search("./resources/CollectionIndex/", "./resources/documentCollection");
         PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("DISCOVERERS".toLowerCase());
         
@@ -27,6 +33,6 @@ public class Main {
             System.out.println(pageRankInfo.getRank());
             System.out.println(pageRankInfo.getSnippet());
         }
-
+                */
     }
 }

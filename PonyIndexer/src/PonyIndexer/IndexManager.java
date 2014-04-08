@@ -9,7 +9,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -71,9 +70,7 @@ public class IndexManager {
                             indexTerm(documentWords, term, fileName, cntDocument, cntWord);
                         }
                     }
-                    
                     cntWord += (long)(nextToken.length());
-
                 }
                 ++cntWord;
             }
