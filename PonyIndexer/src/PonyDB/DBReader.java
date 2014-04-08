@@ -83,6 +83,10 @@ public class DBReader {
         return vocabularyInfoHolder;
     }
     
+    public RandomAccessFile loadDocument(String path) throws FileNotFoundException{
+        return new RandomAccessFile(path, "r");
+    }
+    
     private static void ReadFilesPathFromFolder(
                                         List<String> fileList,
                                         String path ){

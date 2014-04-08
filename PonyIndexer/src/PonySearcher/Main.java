@@ -18,8 +18,8 @@ public class Main {
     
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, Exception{
         
-        Search search = new Search("./resources/CollectionIndex/");
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("light");
+        Search search = new Search("./resources/CollectionIndex/", "./resources/documentCollection");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("DISCOVERERS".toLowerCase());
         
         while(!retrieveAndRank.isEmpty()){
           PageRankInfo pageRankInfo = retrieveAndRank.poll();

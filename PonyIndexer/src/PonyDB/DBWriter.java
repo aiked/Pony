@@ -43,8 +43,6 @@ public class DBWriter {
         this.openPath = path;
         this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "rw");
         this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "rw");
-        this.DocumentInfoFile.seek(0L);
-        this.PostingInfoFile.seek(0L);
     }
     
     public void closeConnections() throws IOException{

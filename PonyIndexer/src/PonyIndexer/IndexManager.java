@@ -17,7 +17,8 @@ import java.util.StringTokenizer;
  * @author jit
  */
 public class IndexManager {
-    private static final String DOCUMENT_TERMS_DELIMITER = "\t\n\r\f ";
+    private static final String DOCUMENT_TERMS_DELIMITER = "\t\r\f ";
+    private static final String IS_DOCUMENT_TERMS_DELIMITER = "(\t|\r|\f| )*";
     
     private static VocabularyInfoHolder vocHolder   = null;
     private static IndexManager instance = null;
@@ -56,17 +57,25 @@ public class IndexManager {
             
             String line;
             while ((line = reader.readLine()) != null){
-                StringTokenizer tokenizer = new StringTokenizer(line, DOCUMENT_TERMS_DELIMITER);
+                
+                
+                StringTokenizer tokenizer = new StringTokenizer(line, DOCUMENT_TERMS_DELIMITER, true);
+                
                 while(tokenizer.hasMoreTokens() ) {
                     
-                    ++cntWord;
                     String nextToken = tokenizer.nextToken();
-                    String term = stopWords.getValidTerm(nextToken.toLowerCase());
                     
-                    if(term != null){
-                        indexTerm(documentWords, term, fileName, cntDocument, cntWord);
+                    if(!nextToken.matches(IS_DOCUMENT_TERMS_DELIMITER)){
+                        String term = stopWords.getValidTerm(nextToken.toLowerCase());
+                        if(term != null){
+                            indexTerm(documentWords, term, fileName, cntDocument, cntWord);
+                        }
                     }
+                    
+                    cntWord += (long)(nextToken.length());
+
                 }
+                ++cntWord;
             }
             reader.close();
 
@@ -88,7 +97,6 @@ public class IndexManager {
         
         DBWriterInstance.closeConnections();
     }
-    
     
     private void indexTerm( HashSet<String> documentWords,
                             String term, String filePath,
