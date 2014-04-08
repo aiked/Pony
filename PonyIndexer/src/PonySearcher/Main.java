@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package PonySearcher;
 
 import java.io.FileNotFoundException;
@@ -18,7 +12,12 @@ public class Main {
     
     public static void main(String[] args) throws IOException, FileNotFoundException, ClassNotFoundException, Exception{
         
-        Search search = new Search("./resources/CollectionIndex/", "./resources/documentCollection");
+        Search search = new Search(
+                "./resources/CollectionIndex/", 
+                "./resources/documentCollection", 
+                new VectorSpaceRankingPolicy()
+            );
+        
         PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("DISCOVERERS".toLowerCase());
         
         while(!retrieveAndRank.isEmpty()){

@@ -13,7 +13,8 @@ public class VocabularyInfoHolder  implements Serializable {
     private static VocabularyInfoHolder instance = null;
     
     private HashMap<String, VocabularyInfo> vocMap;
-    private Long NumberOfDocuments;
+    private Long numberOfDocuments;
+    private double avgDocumentsTerm;
     
     public VocabularyInfoHolder(){
         vocMap = new HashMap<>();
@@ -48,12 +49,21 @@ public class VocabularyInfoHolder  implements Serializable {
     }
 
     public Long getNumberOfDocuments() {
-        return NumberOfDocuments;
+        return numberOfDocuments;
     }
 
     public void setNumberOfDocuments(Long NumberOfDocuments) {
-        this.NumberOfDocuments = NumberOfDocuments;
+        this.numberOfDocuments = NumberOfDocuments;
     }
+
+    public double getAvgDocumentsTerm() {
+        return avgDocumentsTerm;
+    }
+
+    public void setAvgDocumentsTerm(double avgDocumentsTerm) {
+        this.avgDocumentsTerm = avgDocumentsTerm;
+    }
+    
     
     public HashMap<String, VocabularyInfo> getMap(){
         return vocMap;

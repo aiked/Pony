@@ -44,7 +44,8 @@ public class IndexManager {
         ArrayList<String> fileList = DBReader.ReadFilesPathFromFolder(ResourcesFolder);
         vocHolder.setNumberOfDocuments((long)(fileList.size()));
         
-        Long cntDocument = 0L;
+        long totalWordsInAllDocuments = 0L;
+        long cntDocument = 0L;
         DBWriter DBWriterInstance = PonyDB.DBWriter.getInstance();
         DBWriterInstance.openConnections(StorageFolder);
         
@@ -68,6 +69,7 @@ public class IndexManager {
                     if(!nextToken.matches(IS_DOCUMENT_TERMS_DELIMITER)){
                         String term = stopWords.getValidTerm(nextToken.toLowerCase());
                         if(term != null){
+                            ++totalWordsInAllDocuments;
                             indexTerm(documentWords, term, fileName, cntDocument, cntWord);
                         }
                     }
@@ -93,6 +95,8 @@ public class IndexManager {
                                                     (vocInfo.getPostHolder());
             vocInfo.setPostHolder(null);
         }
+        
+        vocHolder.setAvgDocumentsTerm( (double)totalWordsInAllDocuments/(double)vocHolder.getNumberOfDocuments() );
         DBWriterInstance.saveVocabularyInfoHolder(vocHolder);
         
         DBWriterInstance.closeConnections();
@@ -134,9 +138,9 @@ public class IndexManager {
             final VocabularyInfoHolder vocHolder, 
             final VocabularyInfo vocInfo){
         
-        Double base2 = Math.log(2);
-        Long N = vocHolder.getNumberOfDocuments();
-        return (double)(Math.log((N/vocInfo.getDf()))/base2);
+        double base2 = Math.log(2);
+        double N = vocHolder.getNumberOfDocuments();
+        return Math.log( N / ((double)vocInfo.getDf()) ) / base2;
     }
     
     private void calculateDfs(){
@@ -166,7 +170,7 @@ public class IndexManager {
         }
         
         for ( PostingInfo postDoc : docs){
-            postDoc.setTf(((double) (postDoc.getPositions().size() / maxfreq)));
+            postDoc.setTf( ((double) postDoc.getPositions().size()) / ((double) maxfreq) );
         }
     }
     
