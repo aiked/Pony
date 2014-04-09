@@ -32,6 +32,6 @@ public class SnippetGenerator {
         buf_start = i;
         while(buffer[--buf_end]!=' '){;}
 
-        return new String(buffer,buf_start+1,buf_end-buf_start);
+        return new String(buffer,buf_start+1,buf_end-buf_start).replaceAll("\\s+", " ");
     }
 }

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+import Common.TermNormalizer;
+
 /**
  *
  * @author jit
@@ -19,7 +21,9 @@ public class IndexManager {
     private static final String DOCUMENT_TERMS_DELIMITER = "\t\r\f ";
     private static final String IS_DOCUMENT_TERMS_DELIMITER = "(\t|\r|\f| )*";
     
-    private static VocabularyInfoHolder vocHolder   = null;
+    private static VocabularyInfoHolder vocHolder = null;
+    private static TermNormalizer termNormalizer = null;
+            
     private static IndexManager instance = null;
     
     private IndexManager(){}
@@ -27,6 +31,9 @@ public class IndexManager {
     public static IndexManager getInstance(){
         if( instance == null){
             instance = new IndexManager();
+            
+            vocHolder = VocabularyInfoHolder.getInstance();
+            termNormalizer = TermNormalizer.getInstance();
         }
         return instance;
     }
@@ -37,9 +44,8 @@ public class IndexManager {
                                                         IOException {
         
         StopWords stopWords = new StopWords();
-        stopWords.importFromFolder(StopWordsFolder);
         
-        vocHolder = VocabularyInfoHolder.getInstance();
+        stopWords.importFromFolder(StopWordsFolder);
         ArrayList<String> fileList = DBReader.ReadFilesPathFromFolder(ResourcesFolder);
         vocHolder.setNumberOfDocuments((long)(fileList.size()));
         
@@ -57,18 +63,25 @@ public class IndexManager {
             
             String line;
             while ((line = reader.readLine()) != null){
-                
-                
                 StringTokenizer tokenizer = new StringTokenizer(line, DOCUMENT_TERMS_DELIMITER, true);
-                
+
                 while(tokenizer.hasMoreTokens() ) {
                     
                     String nextToken = tokenizer.nextToken();
                     
                     if(!nextToken.matches(IS_DOCUMENT_TERMS_DELIMITER)){
-                        String term = stopWords.getValidTerm(nextToken.toLowerCase());
-                        if(term != null){
+                        
+                        String term = nextToken;
+                        
+                        term = termNormalizer.termToLowerCase(term);
+                        if(termNormalizer.isTermGreek(term)){
+                            term = termNormalizer.removePunctuation(term);
+                        }
+                        term = stopWords.getValidTerm(term);
+                        
+                        if(term != null && !term.isEmpty()){
                             ++totalWordsInAllDocuments;
+                            term = termNormalizer.stemTerm(term);
                             indexTerm(documentWords, term, fileName, cntDocument, cntWord);
                         }
                     }

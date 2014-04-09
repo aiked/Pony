@@ -6,14 +6,19 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
+import Common.TermNormalizer;
+
 /**
  *
  * @author jit
  */
 public class StopWords {
+    
     private HashSet<String> words;
+    private TermNormalizer termNormalizer;
     
     public StopWords(){
+        termNormalizer = TermNormalizer.getInstance();
         this.words = new HashSet();
     }
 
@@ -25,6 +30,10 @@ public class StopWords {
             String line;
 
             while ((line = br.readLine()) != null) {
+                line = termNormalizer.termToLowerCase(line);
+                if(termNormalizer.isTermGreek(line)){
+                    line = termNormalizer.removePunctuation(line);
+                }
                 words.add(line);
             }   
         }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
@@ -63,12 +72,5 @@ public class StopWords {
     
     public int getSize(){
         return words.size();
-    }
-    
-    public void printWords(){
-        System.out.println("\nStopWords | Size: "+words.size());
-        for ( String s : words ){
-            System.out.println(s);
-        }
     }
 }
