@@ -11,6 +11,7 @@ public class TermNormalizer {
     private static TermNormalizer instance = null;
     
     private TermNormalizer(){
+        
         Stemmer.Initialize();
     }
     

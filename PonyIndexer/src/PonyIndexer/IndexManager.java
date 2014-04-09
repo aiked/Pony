@@ -107,7 +107,7 @@ public class IndexManager {
         }
         
         vocHolder.setAvgDocumentsTerm( (double)totalWordsInAllDocuments/(double)vocHolder.getNumberOfDocuments() );
-        DBWriterInstance.saveVocabularyInfoHolder(vocHolder);
+        DBWriterInstance.saveVocabularyInfoHolderOpt(vocHolder);
         
         DBWriterInstance.closeConnections();
     }
@@ -184,4 +184,7 @@ public class IndexManager {
         }
     }
     
+    public int getVocSize(){
+        return vocHolder.getSize();
+    }
 }

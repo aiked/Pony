@@ -4,10 +4,13 @@
  */
 package PonyDB;
 
-import PonyIndexer.DocumentInfo;
 import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfoHolder;
+import PonyIndexer.VocabularyInfo;
+import PonyIndexer.DocumentInfo;
+
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +32,7 @@ public class DBReader {
     private String openPath;
     private RandomAccessFile DocumentInfoFile;
     private RandomAccessFile PostingInfoFile;
+    private RandomAccessFile VocabularyFile;
     
     public DBReader(){
     }
@@ -38,11 +42,13 @@ public class DBReader {
         this.openPath = path;
         this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "r");
         this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "r");
+        this.VocabularyFile = new RandomAccessFile(path + Configuration.VOCABULARY_HOLDER_NAME, "r");
     }
     
     public void closeConnections() throws IOException{
         this.DocumentInfoFile.close();
         this.PostingInfoFile.close();
+        this.VocabularyFile.close();
     }
     
     public DocumentInfo loadDocumentInfo( long pointer ) throws IOException{
@@ -75,7 +81,8 @@ public class DBReader {
         return postingInfoHolder;
     }
     
-    public VocabularyInfoHolder loadVocabularyInfoHolder() throws FileNotFoundException, IOException, ClassNotFoundException{
+    public VocabularyInfoHolder loadVocabularyInfoHolder() 
+            throws FileNotFoundException, IOException, ClassNotFoundException{
         InputStream vocFile = new FileInputStream(this.openPath + Configuration.VOCABULARY_HOLDER_NAME);
         InputStream vocBuffer = new BufferedInputStream(vocFile);
         ObjectInput vocObject = new ObjectInputStream (vocBuffer);
@@ -83,6 +90,30 @@ public class DBReader {
         return vocabularyInfoHolder;
     }
     
+    public VocabularyInfoHolder loadVocabularyInfoHolderOpt() 
+            throws FileNotFoundException, IOException, ClassNotFoundException{
+        
+            VocabularyInfoHolder vocabularyInfoHolder = VocabularyInfoHolder.getInstance();
+            
+            vocabularyInfoHolder.setNumberOfDocuments(this.VocabularyFile.readLong());
+            vocabularyInfoHolder.setAvgDocumentsTerm(this.VocabularyFile.readDouble());
+            
+            long mapLength = this.VocabularyFile.readLong();
+            
+            for(long i=0; i<mapLength; ++i){
+                
+                String term = this.VocabularyFile.readUTF();
+                long df = this.VocabularyFile.readLong();
+                double idf = this.VocabularyFile.readDouble();
+                long pointer = this.VocabularyFile.readLong();
+                
+                VocabularyInfo vocInfo = new VocabularyInfo(term,df,idf,pointer);
+                vocabularyInfoHolder.add(vocInfo);
+            }
+            
+            return vocabularyInfoHolder;
+    }
+            
     public RandomAccessFile loadDocument(String path) throws FileNotFoundException{
         return new RandomAccessFile(path, "r");
     }

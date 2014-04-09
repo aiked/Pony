@@ -12,9 +12,9 @@ public class VocabularyInfoHolder  implements Serializable {
 
     private static VocabularyInfoHolder instance = null;
     
-    private HashMap<String, VocabularyInfo> vocMap;
     private Long numberOfDocuments;
     private double avgDocumentsTerm;
+    private HashMap<String, VocabularyInfo> vocMap;
     
     public VocabularyInfoHolder(){
         vocMap = new HashMap<>();

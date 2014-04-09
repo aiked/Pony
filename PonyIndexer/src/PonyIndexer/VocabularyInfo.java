@@ -28,6 +28,14 @@ public class VocabularyInfo implements Serializable {
         pointer = -1L;
     }
     
+    public VocabularyInfo( String term, long df, double idf, long pointer){
+        this.term = term;
+        this.df = df;
+        this.idf = idf;
+        this.postHolder = null;
+        this.pointer = pointer;
+    }
+    
     public void addPostingInfo( PostingInfo info){
             postHolder.add(info);
     }

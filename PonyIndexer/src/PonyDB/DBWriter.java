@@ -1,17 +1,17 @@
 package PonyDB;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import PonyIndexer.DocumentInfo;
 import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
+import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ public class DBWriter {
     private String openPath;
     private RandomAccessFile DocumentInfoFile;
     private RandomAccessFile PostingInfoFile;
+    private RandomAccessFile VocabularyFile;
         
     private DBWriter(){}
     
@@ -43,11 +44,13 @@ public class DBWriter {
         this.openPath = path;
         this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "rw");
         this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "rw");
+        this.VocabularyFile = new RandomAccessFile(path + Configuration.VOCABULARY_HOLDER_NAME, "rw");
     }
     
     public void closeConnections() throws IOException{
         this.DocumentInfoFile.close();
         this.PostingInfoFile.close();
+        this.VocabularyFile.close();
     }
         
     public long saveNextDocumentInfo( DocumentInfo documentInfo ) 
@@ -86,4 +89,29 @@ public class DBWriter {
         vocabularyInfoHolderFile.writeObject( (Object) vocabularyInfoHolder);
         vocabularyInfoHolderFile.close();
     }
+    
+    public  void saveVocabularyInfoHolderOpt( VocabularyInfoHolder vocabularyInfoHolder ) 
+                        throws FileNotFoundException, IOException{
+       
+        VocabularyInfoHolder vocHolder = VocabularyInfoHolder.getInstance();
+        HashMap<String,VocabularyInfo> map = vocHolder.getVocMap();
+        long mapLength = map.size();
+        
+        this.VocabularyFile.writeLong(vocHolder.getNumberOfDocuments());
+        this.VocabularyFile.writeDouble(vocHolder.getAvgDocumentsTerm());
+        this.VocabularyFile.writeLong(mapLength);
+        
+        for(Entry<String,VocabularyInfo> entry : map.entrySet()){
+            VocabularyInfo value = entry.getValue();
+            
+            this.VocabularyFile.writeUTF(entry.getKey());
+            
+            this.VocabularyFile.writeLong(value.getDf());
+            this.VocabularyFile.writeDouble(value.getIdf());
+            this.VocabularyFile.writeLong(value.getPointer());
+                    
+        }
+    }
+    
+    
 }
