@@ -72,7 +72,6 @@ public class DBReader {
             double w = this.PostingInfoFile.readDouble();
             int positionsSize = this.PostingInfoFile.readInt();
             PostingInfo postingInfo = new PostingInfo(id, tf);
-            postingInfo.setVectorSpaceW(w);
             for(int j=0; j<positionsSize; ++j){
                 postingInfo.addPosition(this.PostingInfoFile.readLong());
             }

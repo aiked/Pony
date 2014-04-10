@@ -162,7 +162,6 @@ public class IndexManager {
             PostingInfoHolder postHolder = vocInfo.getPostHolder();
             for( Long id : postHolder.getAllInfo().keySet()){
                 PostingInfo postInfo = postHolder.get(id);
-                postInfo.setVectorSpaceW(vocInfo.getIdf()*postInfo.getTf());
             }
         }
     }

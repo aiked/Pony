@@ -6,11 +6,9 @@ import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
@@ -71,7 +69,6 @@ public class DBWriter {
             PostingInfo value = entry.getValue();
             this.PostingInfoFile.writeLong(value.getId());
             this.PostingInfoFile.writeDouble(value.getTf());
-            this.PostingInfoFile.writeDouble(value.getVectorSpaceW());
             ArrayList<Long> positions = value.getPositions();
             this.PostingInfoFile.writeInt(positions.size());
             for( Long pos : positions ){

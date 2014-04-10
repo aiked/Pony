@@ -20,7 +20,7 @@ public class VectorSpaceRankingPolicy implements PageRankingPolicy{
     
     @Override
     public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder) {
-        return value.getVectorSpaceW();
+        return 0d;
     }
     
 }
