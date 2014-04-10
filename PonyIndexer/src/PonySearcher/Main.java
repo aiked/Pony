@@ -27,7 +27,7 @@ public class Main {
 //        System.out.println( SnippetGenerator.SnippetGenerator( file, "land", 5941L));
         
         
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("DISCOVERERS");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("άνθωπος");
         
         while(!retrieveAndRank.isEmpty()){
           PageRankInfo pageRankInfo = retrieveAndRank.poll();

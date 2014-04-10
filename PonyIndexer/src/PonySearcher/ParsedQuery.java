@@ -3,10 +3,8 @@ package PonySearcher;
 import Common.TermNormalizer;
 import PonyIndexer.StopWords;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PriorityQueue;
 
 /**
  *
