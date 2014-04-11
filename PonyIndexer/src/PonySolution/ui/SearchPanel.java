@@ -144,10 +144,6 @@ public class SearchPanel extends javax.swing.JPanel {
                 while(!pagesRankInfo.isEmpty()){
                     PageRankInfo pageRankInfo = pagesRankInfo.poll();
                     addResultEntry(pageRankInfo);
-
-                    System.out.println("====================");
-                    System.out.println(pageRankInfo.getRank());
-                    System.out.println(pageRankInfo.getSnippets());
                 } 
                 return;
             }
