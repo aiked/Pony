@@ -13,6 +13,6 @@ import PonyIndexer.VocabularyInfoHolder;
 public interface PageRankingPolicy {
     
     public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQuery.ParsedQueryWord parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder);
-    public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder);
+    public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder, VocabularyInfo vocabularyInfo);
     
 }

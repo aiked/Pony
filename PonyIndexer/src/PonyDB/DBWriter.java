@@ -6,11 +6,10 @@ import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
@@ -26,9 +25,9 @@ public class DBWriter {
     private static DBWriter instance = null;
     
     private String openPath;
-    private RandomAccessFile DocumentInfoFile;
-    private RandomAccessFile PostingInfoFile;
-    private RandomAccessFile VocabularyFile;
+    private RandomAccessFile documentInfoFile;
+    private RandomAccessFile postingInfoFile;
+    private RandomAccessFile vocabularyFile;
         
     private DBWriter(){}
     
@@ -41,49 +40,51 @@ public class DBWriter {
     
     public void openConnections(String path) throws FileNotFoundException, 
                                                     IOException{
-        this.openPath = path;
-        this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "rw");
-        this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "rw");
-        this.VocabularyFile = new RandomAccessFile(path + Configuration.VOCABULARY_HOLDER_NAME, "rw");
+        openPath = path + "\\";
+        documentInfoFile = new RandomAccessFile(openPath + Configuration.DOCUMENT_INFO_NAME, "rw");
+        documentInfoFile.setLength(0);
+        postingInfoFile = new RandomAccessFile(openPath + Configuration.POSTING_INFO_NAME, "rw");
+        postingInfoFile.setLength(0);
+        vocabularyFile = new RandomAccessFile(openPath + Configuration.VOCABULARY_HOLDER_NAME, "rw");
+        vocabularyFile.setLength(0);
     }
     
     public void closeConnections() throws IOException{
-        this.DocumentInfoFile.close();
-        this.PostingInfoFile.close();
-        this.VocabularyFile.close();
+        documentInfoFile.close();
+        postingInfoFile.close();
+        vocabularyFile.close();
     }
         
     public long saveNextDocumentInfo( DocumentInfo documentInfo ) 
                                             throws IOException{
-        this.DocumentInfoFile.writeLong(documentInfo.getId());
-        this.DocumentInfoFile.writeUTF(documentInfo.getPath());
-        this.DocumentInfoFile.writeUTF(documentInfo.getType());
-        this.DocumentInfoFile.writeLong(documentInfo.getTotalTerm());
-        return this.DocumentInfoFile.getFilePointer();
+        documentInfoFile.writeLong(documentInfo.getId());
+        documentInfoFile.writeUTF(documentInfo.getPath());
+        documentInfoFile.writeUTF(documentInfo.getType());
+        documentInfoFile.writeLong(documentInfo.getTotalTerm());
+        return documentInfoFile.getFilePointer();
     }
      
     public long saveNextPostingInfoHolder( PostingInfoHolder postingInfoHolder ) 
                                             throws IOException{
         HashMap<Long, PostingInfo> map = postingInfoHolder.getAllInfo();
-        this.PostingInfoFile.writeInt(map.size());
+        postingInfoFile.writeInt(map.size());
         for(Entry<Long, PostingInfo> entry : map.entrySet()) {
-            this.PostingInfoFile.writeLong(entry.getKey());
+            postingInfoFile.writeLong(entry.getKey());
             PostingInfo value = entry.getValue();
-            this.PostingInfoFile.writeLong(value.getId());
-            this.PostingInfoFile.writeDouble(value.getTf());
-            this.PostingInfoFile.writeDouble(value.getVectorSpaceW());
+            postingInfoFile.writeLong(value.getId());
+            postingInfoFile.writeDouble(value.getTf());
             ArrayList<Long> positions = value.getPositions();
-            this.PostingInfoFile.writeInt(positions.size());
+            postingInfoFile.writeInt(positions.size());
             for( Long pos : positions ){
-                this.PostingInfoFile.writeLong(pos);
+                postingInfoFile.writeLong(pos);
             }
         }
-        return this.PostingInfoFile.getFilePointer();
+        return postingInfoFile.getFilePointer();
     }
     
     public void saveVocabularyInfoHolder( VocabularyInfoHolder vocabularyInfoHolder ) 
                         throws FileNotFoundException, IOException{
-        OutputStream vocFile = new FileOutputStream(this.openPath + Configuration.VOCABULARY_HOLDER_NAME);
+        OutputStream vocFile = new FileOutputStream(openPath + Configuration.VOCABULARY_HOLDER_NAME);
         OutputStream vocBuffer = new BufferedOutputStream(vocFile);
         ObjectOutputStream vocabularyInfoHolderFile = new ObjectOutputStream(vocBuffer);
         vocabularyInfoHolderFile.writeObject( (Object) vocabularyInfoHolder);
@@ -97,21 +98,24 @@ public class DBWriter {
         HashMap<String,VocabularyInfo> map = vocHolder.getVocMap();
         long mapLength = map.size();
         
-        this.VocabularyFile.writeLong(vocHolder.getNumberOfDocuments());
-        this.VocabularyFile.writeDouble(vocHolder.getAvgDocumentsTerm());
-        this.VocabularyFile.writeLong(mapLength);
+        vocabularyFile.writeLong(vocHolder.getNumberOfDocuments());
+        vocabularyFile.writeDouble(vocHolder.getAvgDocumentsTerm());
+        vocabularyFile.writeLong(mapLength);
         
         for(Entry<String,VocabularyInfo> entry : map.entrySet()){
             VocabularyInfo value = entry.getValue();
             
-            this.VocabularyFile.writeUTF(entry.getKey());
+            vocabularyFile.writeUTF(entry.getKey());
             
-            this.VocabularyFile.writeLong(value.getDf());
-            this.VocabularyFile.writeDouble(value.getIdf());
-            this.VocabularyFile.writeLong(value.getPointer());
+            vocabularyFile.writeLong(value.getDf());
+            vocabularyFile.writeDouble(value.getIdf());
+            vocabularyFile.writeLong(value.getPointer());
                     
         }
     }
     
-    
+    public static boolean createFolder(String path){
+        File file = new File(path);
+        return file.mkdir();
+    }
 }

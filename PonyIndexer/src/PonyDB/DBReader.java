@@ -30,51 +30,60 @@ import java.util.List;
 public class DBReader {
 
     private String openPath;
-    private RandomAccessFile DocumentInfoFile;
-    private RandomAccessFile PostingInfoFile;
-    private RandomAccessFile VocabularyFile;
+    private RandomAccessFile documentInfoFile;
+    private RandomAccessFile postingInfoFile;
+    private RandomAccessFile vocabularyFile;
     
-    public DBReader(){
-    }
-    
+    public DBReader(){}
     
     public void openConnections(String path) throws FileNotFoundException, IOException{
-        this.openPath = path;
-        this.DocumentInfoFile = new RandomAccessFile(path + Configuration.DOCUMENT_INFO_NAME, "r");
-        this.PostingInfoFile = new RandomAccessFile(path + Configuration.POSTING_INFO_NAME, "r");
-        this.VocabularyFile = new RandomAccessFile(path + Configuration.VOCABULARY_HOLDER_NAME, "r");
+        openPath = path + "\\";
+        documentInfoFile = new RandomAccessFile(openPath + Configuration.DOCUMENT_INFO_NAME, "r");
+        postingInfoFile = new RandomAccessFile(openPath + Configuration.POSTING_INFO_NAME, "r");
+        vocabularyFile = new RandomAccessFile(openPath + Configuration.VOCABULARY_HOLDER_NAME, "r");
     }
     
     public void closeConnections() throws IOException{
-        this.DocumentInfoFile.close();
-        this.PostingInfoFile.close();
-        this.VocabularyFile.close();
+        documentInfoFile.close();
+        postingInfoFile.close();
+        vocabularyFile.close();
     }
     
+    public static boolean indexFilesExist(String path){
+        String openPath = path + "\\";
+        File folder = new File(openPath);
+        if(folder.exists()){
+            File documentFile = new File( openPath + Configuration.DOCUMENT_INFO_NAME );
+            File postingFile = new File( openPath + Configuration.POSTING_INFO_NAME );
+            File vodabularyFile = new File( openPath + Configuration.VOCABULARY_HOLDER_NAME );
+            assert( !documentFile.exists() || (documentFile.exists() && postingFile.exists() && vodabularyFile.exists())  );
+            return documentFile.exists();
+        }
+        return false;
+    } 
+    
     public DocumentInfo loadDocumentInfo( long pointer ) throws IOException{
-        this.DocumentInfoFile.seek(pointer);
-        Long id = this.DocumentInfoFile.readLong();
-        String path = this.DocumentInfoFile.readUTF();
-        String type = this.DocumentInfoFile.readUTF();
-        Long totalTerm = this.DocumentInfoFile.readLong();
+        documentInfoFile.seek(pointer);
+        Long id = documentInfoFile.readLong();
+        String path = documentInfoFile.readUTF();
+        String type = documentInfoFile.readUTF();
+        Long totalTerm = documentInfoFile.readLong();
         return new DocumentInfo(id, path, totalTerm);
     }
     
     public PostingInfoHolder loadPostingInfoHolder( long pointer ) throws IOException{
-        this.PostingInfoFile.seek(pointer);
+        postingInfoFile.seek(pointer);
         PostingInfoHolder postingInfoHolder = new PostingInfoHolder();
-        int mapSize = this.PostingInfoFile.readInt();
+        int mapSize = postingInfoFile.readInt();
         for( int i=0; i<mapSize; ++i ){
-            long key = this.PostingInfoFile.readLong();
-            long id = this.PostingInfoFile.readLong();
+            long key = postingInfoFile.readLong();
+            long id = postingInfoFile.readLong();
             assert(key==id);
-            double tf = this.PostingInfoFile.readDouble();
-            double w = this.PostingInfoFile.readDouble();
-            int positionsSize = this.PostingInfoFile.readInt();
+            double tf = postingInfoFile.readDouble();
+            int positionsSize = postingInfoFile.readInt();
             PostingInfo postingInfo = new PostingInfo(id, tf);
-            postingInfo.setVectorSpaceW(w);
             for(int j=0; j<positionsSize; ++j){
-                postingInfo.addPosition(this.PostingInfoFile.readLong());
+                postingInfo.addPosition(postingInfoFile.readLong());
             }
             postingInfoHolder.add(postingInfo);
         }
@@ -83,7 +92,7 @@ public class DBReader {
     
     public VocabularyInfoHolder loadVocabularyInfoHolder() 
             throws FileNotFoundException, IOException, ClassNotFoundException{
-        InputStream vocFile = new FileInputStream(this.openPath + Configuration.VOCABULARY_HOLDER_NAME);
+        InputStream vocFile = new FileInputStream(openPath + Configuration.VOCABULARY_HOLDER_NAME);
         InputStream vocBuffer = new BufferedInputStream(vocFile);
         ObjectInput vocObject = new ObjectInputStream (vocBuffer);
         VocabularyInfoHolder vocabularyInfoHolder = (VocabularyInfoHolder) vocObject.readObject();
@@ -95,17 +104,17 @@ public class DBReader {
         
             VocabularyInfoHolder vocabularyInfoHolder = VocabularyInfoHolder.getInstance();
             
-            vocabularyInfoHolder.setNumberOfDocuments(this.VocabularyFile.readLong());
-            vocabularyInfoHolder.setAvgDocumentsTerm(this.VocabularyFile.readDouble());
+            vocabularyInfoHolder.setNumberOfDocuments(vocabularyFile.readLong());
+            vocabularyInfoHolder.setAvgDocumentsTerm(vocabularyFile.readDouble());
             
-            long mapLength = this.VocabularyFile.readLong();
+            long mapLength = vocabularyFile.readLong();
             
             for(long i=0; i<mapLength; ++i){
                 
-                String term = this.VocabularyFile.readUTF();
-                long df = this.VocabularyFile.readLong();
-                double idf = this.VocabularyFile.readDouble();
-                long pointer = this.VocabularyFile.readLong();
+                String term = vocabularyFile.readUTF();
+                long df = vocabularyFile.readLong();
+                double idf = vocabularyFile.readDouble();
+                long pointer = vocabularyFile.readLong();
                 
                 VocabularyInfo vocInfo = new VocabularyInfo(term,df,idf,pointer);
                 vocabularyInfoHolder.add(vocInfo);
@@ -129,15 +138,15 @@ public class DBReader {
             File folder = new File(path);
             for( File fp : folder.listFiles() ){
                 if(fp.isDirectory()){
-                    ReadFilesPathFromFolder(fileList, fp.toString());
+                    ReadFilesPathFromFolder(fileList, fp.getAbsolutePath());
                 }
                 else{
-                    fileList.add(fp.getPath());
+                    fileList.add(fp.getAbsolutePath());
                 }
             }
         }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
     }
-    public static ArrayList<String> ReadFilesPathFromFolder( String path ){
+    public static ArrayList<String> readFilesPathFromFolder( String path ){
         ArrayList<String> files = new ArrayList<>();
         ReadFilesPathFromFolder(files, path);
         return files;

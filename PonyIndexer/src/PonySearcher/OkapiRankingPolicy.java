@@ -20,7 +20,7 @@ public class OkapiRankingPolicy  implements PageRankingPolicy{
     }
 
     @Override
-    public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder) {
+    public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder, VocabularyInfo vocabularyInfo) {
         return value.getTf() * ( 2.0 + 0.75 ) 
             / value.getTf() + 2.0 * ( 1 - 0.75 + 0.75 * ( documentInfo.getTotalTerm() / vocabularyInfoHolder.getAvgDocumentsTerm() ) );
     }

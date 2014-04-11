@@ -17,7 +17,8 @@ public class ParsedQuery {
     public ParsedQuery(String StopWordsFolder){
         termNormalizer = TermNormalizer.getInstance();
         stopWords = new StopWords();
-        stopWords.importFromFolder(StopWordsFolder);
+        if(StopWordsFolder!=null)
+            stopWords.importFromFolder(StopWordsFolder);
     }
     
     

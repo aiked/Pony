@@ -26,7 +26,9 @@ public class IndexManager {
             
     private static IndexManager instance = null;
     
-    private IndexManager(){}
+    private IndexManager(){
+    
+    }
     
     public static IndexManager getInstance(){
         if( instance == null){
@@ -40,17 +42,21 @@ public class IndexManager {
     
     public void indexer( String ResourcesFolder,
                          String StopWordsFolder,
-                         String StorageFolder) throws   FileNotFoundException, 
-                                                        IOException {
+                         String StorageFolder,
+                         IndexerListener indexerListener) 
+        throws FileNotFoundException, IOException {
         
+        if(indexerListener!=null) indexerListener.onChangeIndexingState("Indexing...");
         StopWords stopWords = new StopWords();
-        
-        stopWords.importFromFolder(StopWordsFolder);
-        ArrayList<String> fileList = DBReader.ReadFilesPathFromFolder(ResourcesFolder);
+        if(StopWordsFolder!=null)
+            stopWords.importFromFolder(StopWordsFolder);
+        ArrayList<String> fileList = DBReader.readFilesPathFromFolder(ResourcesFolder);
         vocHolder.setNumberOfDocuments((long)(fileList.size()));
-        
+        if(indexerListener!=null) indexerListener.onNewIndexingMsg( vocHolder.getNumberOfDocuments() + " files");
         long totalWordsInAllDocuments = 0L;
-        long cntDocument = 0L;
+        long cntDocumentPointer = 0L;
+        double singleDocumentPercent = (1.0/((double)vocHolder.getNumberOfDocuments()))*100;
+        double cntDocumentPercent = 0.0;
         DBWriter DBWriterInstance = PonyDB.DBWriter.getInstance();
         DBWriterInstance.openConnections(StorageFolder);
         
@@ -82,28 +88,38 @@ public class IndexManager {
                         if(term != null && !term.isEmpty()){
                             ++totalWordsInAllDocuments;
                             term = termNormalizer.stemTerm(term);
-                            indexTerm(documentWords, term, fileName, cntDocument, cntWord);
+                            indexTerm(documentWords, term, fileName, cntDocumentPointer, cntWord);
                         }
                     }
                     cntWord += (long)(nextToken.length());
                 }
-                ++cntWord;
+                cntWord+=2;
             }
             reader.close();
 
-            DocumentInfo currDocumentInfo = new DocumentInfo(cntDocument, fileName, cntWord);
-            calculateTf(documentWords, cntDocument);
+            DocumentInfo currDocumentInfo = new DocumentInfo(cntDocumentPointer, fileName, cntWord);
+            calculateTf(documentWords, cntDocumentPointer);
 
-            cntDocument = DBWriterInstance.saveNextDocumentInfo(currDocumentInfo);            
+            cntDocumentPointer = DBWriterInstance.saveNextDocumentInfo(currDocumentInfo);
+                      
+            if(indexerListener!=null) indexerListener.onPercentileLoad(cntDocumentPercent);
+            cntDocumentPercent += singleDocumentPercent;
         } 
         calculateDfs();
         
+        if(indexerListener!=null) indexerListener.onChangeIndexingState("Saving...");
+        if(indexerListener!=null) indexerListener.onNewIndexingMsg( vocHolder.getSize() + " files");
         Long postingInfoHolderfilePointer = 0L;
+        double singlePostingInfoHolderPercent = (1.0/((double)vocHolder.getSize()*1.05))*100;
+        double cntPostingInfoHolderPercent = 0.0;
         for ( VocabularyInfo vocInfo : vocHolder.getMap().values()){         
             vocInfo.setPointer(postingInfoHolderfilePointer);
             postingInfoHolderfilePointer = DBWriterInstance.saveNextPostingInfoHolder
                                                     (vocInfo.getPostHolder());
             vocInfo.setPostHolder(null);
+            
+            if(indexerListener!=null) indexerListener.onPercentileLoad(cntPostingInfoHolderPercent);
+            cntPostingInfoHolderPercent += singlePostingInfoHolderPercent;
         }
         
         vocHolder.setAvgDocumentsTerm( (double)totalWordsInAllDocuments/(double)vocHolder.getNumberOfDocuments() );
@@ -144,13 +160,14 @@ public class IndexManager {
         return (long)(vocInfo.getPostHolder().getAllInfo().size());
     }
     
+    private static double LOG_BASE_2 = Math.log(2);
     public static double calculateIdf(
             final VocabularyInfoHolder vocHolder, 
             final VocabularyInfo vocInfo){
         
-        double base2 = Math.log(2);
         double N = vocHolder.getNumberOfDocuments();
-        return Math.log( N / ((double)vocInfo.getDf()) ) / base2;
+        double df = ((double)vocInfo.getDf())==N ? vocInfo.getDf()-1 : vocInfo.getDf();
+        return Math.log( N / df )/LOG_BASE_2;
     }
     
     private void calculateDfs(){
@@ -158,15 +175,8 @@ public class IndexManager {
             VocabularyInfo vocInfo = vocHolder.get(term);
             vocInfo.setDf( calculateDf(vocInfo) );
             vocInfo.setIdf( calculateIdf(vocHolder, vocInfo) );
-            
-            PostingInfoHolder postHolder = vocInfo.getPostHolder();
-            for( Long id : postHolder.getAllInfo().keySet()){
-                PostingInfo postInfo = postHolder.get(id);
-                postInfo.setVectorSpaceW(vocInfo.getIdf()*postInfo.getTf());
-            }
         }
-    }
-    
+    } 
 
     private void calculateTf(HashSet<String> words, Long docId){
         

@@ -14,9 +14,10 @@ public class Main {
         
         IndexManager index = IndexManager.getInstance();
         
-        index.indexer(  "./resources/documentCollection",
-                        "./resources/stopWords",
-                        "./resources/CollectionIndex/");
+        index.indexer(  "D:\\github\\Pony\\PonyIndexer\\novels",
+                        "D:\\github\\Pony\\PonyIndexer\\resources\\stopWords",
+                        "D:\\github\\Pony\\PonyIndexer\\CollectionIndex",
+                        null);
         
        
 

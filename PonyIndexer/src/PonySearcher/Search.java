@@ -9,6 +9,7 @@ import PonyIndexer.VocabularyInfoHolder;
 import PonySearcher.ParsedQuery.ParsedQueryWord;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,21 +20,32 @@ import java.util.PriorityQueue;
  * @author Apostolidis
  */
 public class Search {
-    private final DBReader dbReader;
+    private DBReader dbReader;
     private final VocabularyInfoHolder vocabularyInfoHolder;
     private PageRankingPolicy pageRankingPolicy;
-    private final ParsedQuery parsedQuery;
+    private ParsedQuery parsedQuery;
     
-    public Search(String vocabularyInfoHolderFilePath, String documentsPath, 
+    public Search(String collectionIndexPath, 
+            String StopWordsFolder, PageRankingPolicy pageRankingPolicy) 
+            throws FileNotFoundException, IOException, ClassNotFoundException, FileNotFoundException, FileNotFoundException, IOException{
+        initiateSearch(collectionIndexPath, StopWordsFolder, pageRankingPolicy);
+        vocabularyInfoHolder = dbReader.loadVocabularyInfoHolderOpt();
+        
+    }
+    
+    public Search(VocabularyInfoHolder vocabularyInfoHolder, String collectionIndexPath, 
             String StopWordsFolder, PageRankingPolicy pageRankingPolicy) 
             throws FileNotFoundException, IOException, ClassNotFoundException{
-        
+        initiateSearch(collectionIndexPath, StopWordsFolder, pageRankingPolicy);
+        this.vocabularyInfoHolder = vocabularyInfoHolder;        
+    }
+    
+    private void initiateSearch(String collectionIndexPath, String StopWordsFolder, PageRankingPolicy pageRankingPolicy) 
+            throws FileNotFoundException, IOException{
         dbReader = new DBReader();
-        dbReader.openConnections(vocabularyInfoHolderFilePath);
-        vocabularyInfoHolder = dbReader.loadVocabularyInfoHolderOpt();
+        dbReader.openConnections(collectionIndexPath);
         this.pageRankingPolicy = pageRankingPolicy;
         parsedQuery = new ParsedQuery(StopWordsFolder);
-        
     }
 
     public PriorityQueue<PageRankInfo> retrieveAndRank(String query) 
@@ -52,36 +64,45 @@ public class Search {
 
                 double rankOfTerm = pageRankingPolicy.rankTerm(vocabularyInfo, parsedQueryWord, vocabularyInfoHolder, postingInfoHolder);
 
-                for( PostingInfo value : postingInfoHolder.getAllInfo().values() ){
-                    DocumentInfo documentInfo = dbReader.loadDocumentInfo(value.getId());
+                for( PostingInfo postingInfo : postingInfoHolder.getAllInfo().values() ){
+                    DocumentInfo documentInfo = dbReader.loadDocumentInfo(postingInfo.getId());
                     if(documentInfo==null){
                         throw new Exception("Cannot find document info. "
-                                            + "docId: " + value.getId());
+                                            + "docId: " + postingInfo.getId());
                     }else{
-                        PageRankInfo pageRankInfo = tmpPagesRankInfo.get(value.getId());
+                        PageRankInfo pageRankInfo = tmpPagesRankInfo.get(postingInfo.getId());
                         if(pageRankInfo==null){
-                            pageRankInfo = new PageRankInfo(value.getId());
-                            tmpPagesRankInfo.put(value.getId(), pageRankInfo);
+                            RandomAccessFile documentFile = dbReader.loadDocument(documentInfo.getPath());
+                            pageRankInfo = new PageRankInfo(postingInfo.getId(), documentInfo.getPath(), documentFile);
+                            tmpPagesRankInfo.put(postingInfo.getId(), pageRankInfo);
                         }
-
-                        double rankOfDoc = pageRankingPolicy.rankDocument(value, documentInfo, vocabularyInfoHolder);
+                        double rankOfDoc = pageRankingPolicy.rankDocument(postingInfo, documentInfo, vocabularyInfoHolder, vocabularyInfo);
                         
                         pageRankInfo.addRank(rankOfTerm*rankOfDoc);
-                        pageRankInfo.appendSnippet(
-                                value.getPositions().toString() 
-                                +  documentInfo.getPath()); 
+                        ArrayList<String> snippets = SnippetGenerator.generate(
+                                                        pageRankInfo.getDocumentFile(), 
+                                                        parsedQueryWord.getWord(), 
+                                                        postingInfo.getPositions()
+                                                    );
+                        pageRankInfo.appendSnippets(snippets); 
                     }
 
                 }
             }
         }
-        PriorityQueue<PageRankInfo> pagesRankInfo = new PriorityQueue(
-                tmpPagesRankInfo.size(),
-                new PageRankInfoComparator()
-            );
-        pagesRankInfo.addAll(tmpPagesRankInfo.values());
-        
-        return pagesRankInfo;
+        if(tmpPagesRankInfo.isEmpty()){
+            return null;
+        }else{
+            PriorityQueue<PageRankInfo> pagesRankInfo = new PriorityQueue(
+                    tmpPagesRankInfo.size(),
+                    new PageRankInfoComparator()
+                );
+            for(PageRankInfo pageRankInfo : tmpPagesRankInfo.values()){
+                dbReader.closeDocument(pageRankInfo.getDocumentFile());
+                pagesRankInfo.add(pageRankInfo);
+            }
+            return pagesRankInfo;
+        }
     }
         
     public class PageRankInfoComparator implements Comparator<PageRankInfo>{
