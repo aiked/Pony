@@ -4,6 +4,8 @@
 *.DS_Store
 *.swp
 *.out
+*.log
+*.aux
 
 # Java related #
 *.class
@@ -31,3 +33,4 @@ manifest.mf
 
 # Project specific folders
 collectionIndex/
+Figures/*.pdf

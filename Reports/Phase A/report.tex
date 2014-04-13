@@ -65,6 +65,16 @@ The actual searching algorithm has been implemented using two separated models. 
 \section{GUI}
 The system provides command line functionality but the user is advised to prefer the GUI interface for better optical and structured results. The GUI provides functionality to both index and search documents. If a document indexing database does not exist the GUI being provided with the documents collection directory and a stop words directory can index them and "export" a database. If the database already exists in the specified directory the search engine loads it and is ready to provide search functionality. After the search the results are being displayed inside the same GUI along with a variety of information.
 
+\section{Web Crawler}
+Web crawler is a mining tool over the web. The purpose of this tool is to download as many web pages as possible to a target storing layer. This tool can be used as the first step of a search engine. The main functionality is the following:
+\begin{enumerate}
+  \item Download a web page given as argument.
+  \item Parse the page using a Xml parser.
+  \item Find all the <a></a> tags, and extract the href attribute.
+  \item Save only the text content of the page.
+  \item Repeat the same procedure for every extracted href, as many times as the depth argument.
+\end{enumerate}
+
 \section{Build instructions}
 Our system was deployed with: {\tt Netbeans 8.0} and {\tt Java 1.7.0\_45}.Building instructions should be similar to other versions of Netbeans.
 
