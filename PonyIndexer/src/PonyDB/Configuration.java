@@ -15,6 +15,7 @@ public class Configuration {
     public static final String INDEX_FOLDER_NAME = "collectionIndex";
     
     public static final byte SIZE_UTF8 = 2;
+    public static final byte SIZE_SHORT = (Short.SIZE/8);
     public static final byte SIZE_LONG = (Long.SIZE/8);
     public static final byte SIZE_INT = (Integer.SIZE/8);
     public static final byte SIZE_DOUBLE = (Double.SIZE/8);

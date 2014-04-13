@@ -154,15 +154,16 @@ public class DBWriter {
         vocabularyPointer += SIZE_LONG+SIZE_DOUBLE+SIZE_LONG;
         for(Entry<String,VocabularyInfo> entry : map.entrySet()){
             VocabularyInfo value = entry.getValue();
-            //byte[] key = entry.getKey().getBytes("UTF-8");
-            //vocabularyBuffer.putShort((short)key.length);
-            //vocabularyBuffer.put(key);
-            vocabularyBuffer.putInt(entry.getKey().getBytes("UTF-8").length);
-            vocabularyBuffer.put(entry.getKey().getBytes("UTF-8"));
+            
+            byte[] bterm = entry.getKey().getBytes("UTF-8");
+            assert(bterm.length<Short.MAX_VALUE);
+            short bsize = (short) bterm.length;
+            vocabularyBuffer.putShort(bsize);
+            vocabularyBuffer.put(bterm);
             vocabularyBuffer.putLong(value.getDf());
             vocabularyBuffer.putDouble(value.getIdf());
             vocabularyBuffer.putLong(value.getPointer());
-            vocabularyPointer += SIZE_INT + entry.getKey().getBytes("UTF-8").length +SIZE_LONG+SIZE_DOUBLE+SIZE_LONG;
+            vocabularyPointer += SIZE_SHORT + bsize +SIZE_LONG+SIZE_DOUBLE+SIZE_LONG;
             if(vocabularyBuffer.position()>S_WRITE_LIMIT){
                     writeAndClearBuffer(vocabularyChannel,vocabularyBuffer);
             }

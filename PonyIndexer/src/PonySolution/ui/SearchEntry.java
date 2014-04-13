@@ -4,7 +4,19 @@
  */
 package PonySolution.ui;
 
+import PonyDB.DBReader;
 import PonySearcher.PageRankInfo;
+import java.awt.Desktop;
+import static java.awt.image.ImageObserver.WIDTH;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.swing.JComponent.TOOL_TIP_TEXT_KEY;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,15 +26,19 @@ public class SearchEntry extends javax.swing.JPanel {
     private static final int SNIPPET_MAX_LENGTH = 150;
     private static final int DOC_PATH_MAX_LENGTH = 50;
     private static final int RANK_MAX_LENGTH = 7;
+    
+    PageRankInfo pageRankInfo;
     /**
      * Creates new form SearchEntry
      */
     public SearchEntry(PageRankInfo pageRankInfo) {
+        this.pageRankInfo = pageRankInfo;
         initComponents();
         String path = pageRankInfo.getDocumentPath();
         if(path.length()>DOC_PATH_MAX_LENGTH){
             path = ".." + path.substring(path.length()-DOC_PATH_MAX_LENGTH);
-        }        
+        }   
+        
         se_documentPath.setText(path);
         double rank = pageRankInfo.getRank();
         if(rank>0.0){
@@ -71,6 +87,7 @@ public class SearchEntry extends javax.swing.JPanel {
         se_documentPath.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         se_documentPath.setForeground(new java.awt.Color(30, 15, 190));
         se_documentPath.setText("Result path");
+        se_documentPath.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         se_documentPath.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 OnUrlMouseClick(evt);
@@ -111,7 +128,15 @@ public class SearchEntry extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void OnUrlMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OnUrlMouseClick
-        int i=0;
+        if(Desktop.isDesktopSupported()){
+            try {
+                String filePath = pageRankInfo.getDocumentPath();
+                File file = new File(filePath);
+                Desktop.getDesktop().open(file);
+            } catch (IOException ex) {
+                Logger.getLogger(SearchEntry.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_OnUrlMouseClick
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

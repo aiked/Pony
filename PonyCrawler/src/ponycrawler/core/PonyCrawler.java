@@ -51,7 +51,7 @@ public class PonyCrawler {
     }
     
     private static String storePageInfo( PageInfo page, final String storageFolder ){
-        String storageLocation = storageFolder + "\\" +page.getFriendlyUrl();
+        String storageLocation = storageFolder + System.getProperty("file.separator") + page.getFriendlyUrl() + ".txt";
         try {
             PrintWriter writer = new PrintWriter(storageLocation, "UTF-8");
             writer.print( page.getContent() );

@@ -233,24 +233,24 @@ public class PonyCrawlerUi extends javax.swing.JFrame {
 
         @Override
         public void startFetching(final String url) {
-            processView.append( "\nstart fetching: " + url + " ...\n");
+            processView.insert("\nstart fetching: " + url + " ...\n", 0);
         }
 
         @Override
         public void pageFetched(final PageInfo pageinfo) {
             if(pageinfo==null){
-                processView.append( "cannot fetch page.\n");
+                processView.insert( "cannot fetch page.\n", 0);
             }else{
-                processView.append( "fetched!\n" );
+                processView.insert( "fetched!\n", 0 );
                 if( pageinfo.getLinks()!=null ){
-                    processView.append( pageinfo.getLinks().size() + " linkes found.\n");
+                    processView.insert( pageinfo.getLinks().size() + " linkes found.\n", 0);
                 }
             }
         }
 
         @Override
         public void pageSaved(final String path) {
-            processView.append( "page saved to " + path + "\n");
+            processView.insert( "page saved to " + path + "\n", 0);
         }
     };
     
@@ -260,7 +260,7 @@ public class PonyCrawlerUi extends javax.swing.JFrame {
 
     private void onStopFetching(){
         isFetching = false;
-        processView.append( "\nfinish!\n");
+        processView.insert( "\nfinish!\n", 0);
         enableAllInputFields();
     }
     

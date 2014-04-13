@@ -10,14 +10,17 @@ import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +111,7 @@ public class DBReader {
             long mapLength = vocabularyFile.readLong();
             
             for(long i=0; i<mapLength; ++i){
-                int termSize = vocabularyFile.readInt();
+                short termSize = vocabularyFile.readShort();
                 byte [] bTerm = new byte[termSize];
                 vocabularyFile.read(bTerm);
                 String term = new String(bTerm, "UTF-8");
@@ -150,5 +153,22 @@ public class DBReader {
         ArrayList<String> files = new ArrayList<>();
         ReadFilesPathFromFolder(files, path);
         return files;
+    }
+    
+    public static String readFile(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException{
+            BufferedReader reader = new BufferedReader(
+                                        new InputStreamReader(
+                                            new FileInputStream(path), 
+                                            "UTF-8"
+                                        )
+                                    );
+            StringBuilder strFile = new StringBuilder();
+            String line;
+            while( (line = reader.readLine())!=null ){
+                strFile.append( line );
+                strFile.append( '\n' );
+            }
+            reader.close();
+            return strFile.toString();
     }
 }
