@@ -10,10 +10,10 @@ import java.util.ArrayList;
  * @author jit
  */
 public class SnippetGenerator {
-    public static final String SNIPPET_SEPERATOR = " | ";
+    public static final String SNIPPET_SEPERATOR = " <i>|</i> ";
     
-    private static final byte S_OFFSET_START = 25;
-    private static final byte S_OFFSET_END = 25;
+    private static final byte S_OFFSET_START = 30;
+    private static final byte S_OFFSET_END = 30;
     
 
 
@@ -21,10 +21,12 @@ public class SnippetGenerator {
         assert( !positions.isEmpty() );
 
         ArrayList<String> snippets = new ArrayList();
-        for(Long pos : positions){
-            snippets.add( generateSingle(file, term, pos) + SNIPPET_SEPERATOR );
+        if(positions!=null && !positions.isEmpty() ){
+            for(int i=positions.size()-1; i!=0; --i){
+                snippets.add( generateSingle(file, term, positions.get(i)) + SNIPPET_SEPERATOR );
+            }
+            snippets.add( generateSingle(file, term, positions.get(0)) );
         }
-
         return snippets;
     }
    
@@ -39,14 +41,15 @@ public class SnippetGenerator {
         byte[] buffer = new byte[(int)(length)];
         
         file.read(buffer);
-       
+        
         byte buf_start;
         byte buf_end = (byte)(length);
         byte i =0;
         
-        while(buffer[++i]!=' '){;}
+        while( i<length && buffer[++i]!=' '){;}
         buf_start = i;
-        while(buffer[--buf_end]!=' '){;}
+        while( buf_end>0 && buffer[--buf_end]!=' '){;}
+        
         String snippet = new String(buffer,buf_start+1,buf_end-buf_start);
         snippet = snippet.replaceAll("\\s+", " ");
         snippet = snippet.replaceAll(term, "<b>" + term + "</b>");

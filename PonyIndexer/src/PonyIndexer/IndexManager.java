@@ -19,11 +19,6 @@ import Common.TermNormalizer;
  */
 public class IndexManager {
 
-    private static final String DOCUMENT_TERMS_DELIMITER = 
-            "\t\r\f!@#$%^&*;:'\".,0123456789()_-\\[\\]\\{\\}<>?|~`+-=/ \\'\b«»§΄―—’‘–°·";
-    private static final String IS_DOCUMENT_TERMS_DELIMITER = 
-            "\t\r\f!@#$%^&*;:'\".,0123456789()_-\\[\\]\\{\\}<>?|~`+-=/ \\'\b«»§΄―—’‘–°·";
-    
     private static VocabularyInfoHolder vocHolder = null;
     private static TermNormalizer termNormalizer = null;
             
@@ -42,7 +37,7 @@ public class IndexManager {
         }
         return instance;
     }
-    
+
     public void indexer( String ResourcesFolder,
                          String StopWordsFolder,
                          String StorageFolder,
@@ -72,13 +67,13 @@ public class IndexManager {
             
             String line;
             while ((line = reader.readLine()) != null){
-                StringTokenizer tokenizer = new StringTokenizer(line, DOCUMENT_TERMS_DELIMITER, true);
+                StringTokenizer tokenizer = new StringTokenizer(line, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
 
                 while(tokenizer.hasMoreTokens() ) {
                     
                     String nextToken = tokenizer.nextToken();
                     
-                    if(!nextToken.matches(IS_DOCUMENT_TERMS_DELIMITER)){
+                    if(!nextToken.matches(TermNormalizer.IS_DOCUMENT_TERMS_DELIMITER)){
                         
                         String term = nextToken;
                         
@@ -95,7 +90,7 @@ public class IndexManager {
                             indexTerm(documentWords, term, fileName, cntDocumentPointer, cntWord);
                         }
                     }
-                    cntWord += (long)(nextToken.length());
+                    cntWord += (long) TermNormalizer.countUTF8Stringlength(nextToken);
                 }
                 cntWord+=2;
             }

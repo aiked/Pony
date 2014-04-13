@@ -5,6 +5,7 @@ import PonyIndexer.StopWords;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -23,17 +24,20 @@ public class ParsedQuery {
     
     
     public ArrayList<ParsedQueryWord> parse(String query) {
-        String[] words = query.split(" ");
+
         int maxFrequency = 0;
         HashMap<String, Integer> tmpTerms = new HashMap();
-        for(String word : words){
-            if(!word.isEmpty()){
+        StringTokenizer tokenizer = new StringTokenizer(query, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
+        while(tokenizer.hasMoreTokens() ) {
+            String word = tokenizer.nextToken();
+            if(!word.matches(TermNormalizer.IS_DOCUMENT_TERMS_DELIMITER)){
+                
                 word = termNormalizer.termToLowerCase(word);
                 if(termNormalizer.isTermGreek(word)){
                     word = termNormalizer.removePunctuation(word);
                 }
                 word = stopWords.getValidTerm(word);
-                if(word!=null){
+                if(word!=null && !word.isEmpty()){
                     word = termNormalizer.stemTerm(word);
                     Integer frequency = tmpTerms.get(word);
                     if(frequency==null){

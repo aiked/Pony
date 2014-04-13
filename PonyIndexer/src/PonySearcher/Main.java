@@ -21,11 +21,11 @@ public class Main {
 //        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
 //PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank(args[2]);
         
-        Search search = new Search( "/Users/jit/Github/Pony/PonyIndexer/resources/",
-                                    "/Users/jit/Github/Pony/PonyIndexer/resources/stopWords"
+        Search search = new Search( "D:\\github\\Pony\\PonyIndexer\\resources",
+                                    "D:\\github\\Pony\\PonyIndexer\\resources\\stopWords"
                 , new VectorSpaceRankingPolicy() );
         
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("αγιο");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection");
         
         while(!retrieveAndRank.isEmpty()){
             PageRankInfo pageRankInfo = retrieveAndRank.poll();

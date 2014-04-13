@@ -21,13 +21,12 @@ public class Main {
 //        IndexManager index = IndexManager.getInstance();
 //        index.indexer( args[0], args[1], args[2], null );
 //        System.out.println("All files were intexed.");
-       
-        
+     
         IndexManager index = IndexManager.getInstance();
         index.indexer( 
-                "/Users/jit/Github/Pony/PonyIndexer/resources/documentCollection",
-                "/Users/jit/Github/Pony/PonyIndexer/resources/stopWords",
-                "/Users/jit/Github/Pony/PonyIndexer/resources", null );
+                "D:\\github\\Pony\\PonyIndexer\\resources\\documentCollection",
+                "D:\\github\\Pony\\PonyIndexer\\resources\\stopWords",
+                "D:\\github\\Pony\\PonyIndexer\\resources", null );
         
     }
 }
