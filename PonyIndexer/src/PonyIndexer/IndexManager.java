@@ -12,6 +12,10 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 
 import Common.TermNormalizer;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -63,8 +67,12 @@ public class IndexManager {
             
             Long cntWord = 0L;
             documentWords.clear();
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            
+            BufferedReader reader = new BufferedReader(
+                                        new InputStreamReader(
+                                            new FileInputStream(fileName), 
+                                            "UTF-8"
+                                        )
+                                    );
             String line;
             while ((line = reader.readLine()) != null){
                 StringTokenizer tokenizer = new StringTokenizer(line, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);

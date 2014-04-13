@@ -50,7 +50,7 @@ public class SnippetGenerator {
         buf_start = i;
         while( buf_end>0 && buffer[--buf_end]!=' '){;}
         
-        String snippet = new String(buffer,buf_start+1,buf_end-buf_start);
+        String snippet = new String(buffer,buf_start+1,buf_end-buf_start, "UTF-8");
         snippet = snippet.replaceAll("\\s+", " ");
         snippet = snippet.replaceAll(term, "<b>" + term + "</b>");
         return snippet;
