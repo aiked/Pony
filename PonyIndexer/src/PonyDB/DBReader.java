@@ -108,8 +108,10 @@ public class DBReader {
             long mapLength = vocabularyFile.readLong();
             
             for(long i=0; i<mapLength; ++i){
-                
-                String term = vocabularyFile.readUTF();
+                int termSize = vocabularyFile.readInt();
+                byte [] bTerm = new byte[termSize];
+                vocabularyFile.read(bTerm);
+                String term = new String(bTerm, "UTF-8");
                 long df = vocabularyFile.readLong();
                 double idf = vocabularyFile.readDouble();
                 long pointer = vocabularyFile.readLong();

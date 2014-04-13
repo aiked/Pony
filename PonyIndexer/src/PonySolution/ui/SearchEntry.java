@@ -71,6 +71,11 @@ public class SearchEntry extends javax.swing.JPanel {
         se_documentPath.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         se_documentPath.setForeground(new java.awt.Color(30, 15, 190));
         se_documentPath.setText("Result path");
+        se_documentPath.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                OnUrlMouseClick(evt);
+            }
+        });
 
         se_rank.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         se_rank.setForeground(new java.awt.Color(0, 102, 33));
@@ -104,6 +109,11 @@ public class SearchEntry extends javax.swing.JPanel {
                 .addComponent(se_snippet, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void OnUrlMouseClick(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OnUrlMouseClick
+        int i=0;
+    }//GEN-LAST:event_OnUrlMouseClick
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel se_documentPath;
     private javax.swing.JLabel se_rank;
