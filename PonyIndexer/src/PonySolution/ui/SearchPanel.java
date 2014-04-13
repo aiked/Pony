@@ -54,7 +54,7 @@ public class SearchPanel extends javax.swing.JPanel {
 
         setMaximumSize(new java.awt.Dimension(550, 32767));
 
-        sp_searchButton.setText("search");
+        sp_searchButton.setText("Search");
         sp_searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onSearchButtonClicked(evt);
@@ -73,7 +73,7 @@ public class SearchPanel extends javax.swing.JPanel {
         sp_searchPolicies.add(sp_vector);
         sp_vector.setFont(new java.awt.Font("SansSerif", 0, 11)); // NOI18N
         sp_vector.setSelected(true);
-        sp_vector.setText("vector space");
+        sp_vector.setText("Vector Space Model");
         sp_vector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onVectorSpacePolicySelected(evt);
@@ -82,7 +82,7 @@ public class SearchPanel extends javax.swing.JPanel {
 
         sp_searchPolicies.add(sp_opaki);
         sp_opaki.setFont(new java.awt.Font("SansSerif", 0, 11)); // NOI18N
-        sp_opaki.setText("opaki");
+        sp_opaki.setText("Okapi BM25");
         sp_opaki.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onopakiPolicySelected(evt);

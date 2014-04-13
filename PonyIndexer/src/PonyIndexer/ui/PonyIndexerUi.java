@@ -41,7 +41,7 @@ public class PonyIndexerUi extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        documentButton.setText("documents");
+        documentButton.setText("Documents");
         documentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 documentButtonActionPerformed(evt);
@@ -49,27 +49,34 @@ public class PonyIndexerUi extends javax.swing.JFrame {
         });
 
         selectFoldersLabel.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        selectFoldersLabel.setText("Select folders");
+        selectFoldersLabel.setText("Select folders for indexing");
 
-        indexingButton.setText("indexing output");
+        indexingButton.setText("Index directory");
         indexingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 indexingButtonActionPerformed(evt);
             }
         });
 
-        stopWordsEnable.setText("stopWords");
+        stopWordsEnable.setText("Stop words");
+        stopWordsEnable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopWordsEnableActionPerformed(evt);
+            }
+        });
 
-        stopWordsOpenFolderButtom.setText("stopwords folder");
+        stopWordsOpenFolderButtom.setText("Select stop words directory");
 
         javax.swing.GroupLayout stopWordsWrapperLayout = new javax.swing.GroupLayout(stopWordsWrapper);
         stopWordsWrapper.setLayout(stopWordsWrapperLayout);
         stopWordsWrapperLayout.setHorizontalGroup(
             stopWordsWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(stopWordsWrapperLayout.createSequentialGroup()
-                .addComponent(stopWordsOpenFolderButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(stopWordsPathLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(stopWordsOpenFolderButtom, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(stopWordsPathLabel)
+                .addContainerGap(186, Short.MAX_VALUE))
         );
         stopWordsWrapperLayout.setVerticalGroup(
             stopWordsWrapperLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -77,7 +84,7 @@ public class PonyIndexerUi extends javax.swing.JFrame {
             .addComponent(stopWordsOpenFolderButtom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
         );
 
-        jButton1.setText("start indexing");
+        jButton1.setText("Start Indexing");
 
         jProgressBar1.setName(""); // NOI18N
         jProgressBar1.setString("50%");
@@ -106,7 +113,7 @@ public class PonyIndexerUi extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(stopWordsWrapper, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(indexingPathLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 473, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -152,6 +159,10 @@ public class PonyIndexerUi extends javax.swing.JFrame {
     private void indexingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indexingButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_indexingButtonActionPerformed
+
+    private void stopWordsEnableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopWordsEnableActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stopWordsEnableActionPerformed
 
     /**
      * @param args the command line arguments

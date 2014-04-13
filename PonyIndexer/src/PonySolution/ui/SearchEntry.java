@@ -70,16 +70,16 @@ public class SearchEntry extends javax.swing.JPanel {
 
         se_documentPath.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         se_documentPath.setForeground(new java.awt.Color(30, 15, 190));
-        se_documentPath.setText("resultPath");
+        se_documentPath.setText("Result path");
 
         se_rank.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         se_rank.setForeground(new java.awt.Color(0, 102, 33));
         se_rank.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        se_rank.setText("rank");
+        se_rank.setText("Rank");
         se_rank.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         se_snippet.setFont(new java.awt.Font("SansSerif", 0, 11)); // NOI18N
-        se_snippet.setText("snippet");
+        se_snippet.setText("Snippet");
         se_snippet.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

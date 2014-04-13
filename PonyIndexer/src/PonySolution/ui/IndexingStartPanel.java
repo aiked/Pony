@@ -43,7 +43,7 @@ public class IndexingStartPanel extends javax.swing.JPanel {
         is_msgLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         is_msgLabel.setText("This procedure will take several seconds");
 
-        is_startIndexingButton.setText("start indexing");
+        is_startIndexingButton.setText("Start Indexing");
         is_startIndexingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onStartIndexingClicked(evt);

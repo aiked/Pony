@@ -4,13 +4,11 @@
  */
 package PonyDB;
 
+import PonyIndexer.DocumentInfo;
 import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
-import PonyIndexer.VocabularyInfoHolder;
 import PonyIndexer.VocabularyInfo;
-import PonyIndexer.DocumentInfo;
-
-
+import PonyIndexer.VocabularyInfoHolder;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +35,7 @@ public class DBReader {
     public DBReader(){}
     
     public void openConnections(String path) throws FileNotFoundException, IOException{
-        openPath = path + "\\";
+        openPath = path + System.getProperty("file.separator");
         documentInfoFile = new RandomAccessFile(openPath + Configuration.DOCUMENT_INFO_NAME, "r");
         postingInfoFile = new RandomAccessFile(openPath + Configuration.POSTING_INFO_NAME, "r");
         vocabularyFile = new RandomAccessFile(openPath + Configuration.VOCABULARY_HOLDER_NAME, "r");
@@ -50,7 +48,7 @@ public class DBReader {
     }
     
     public static boolean indexFilesExist(String path){
-        String openPath = path + "\\";
+        String openPath = path + System.getProperty("file.separator");
         File folder = new File(openPath);
         if(folder.exists()){
             File documentFile = new File( openPath + Configuration.DOCUMENT_INFO_NAME );

@@ -18,8 +18,11 @@ import Common.TermNormalizer;
  * @author jit
  */
 public class IndexManager {
-    private static final String DOCUMENT_TERMS_DELIMITER = "\t\r\f ";
-    private static final String IS_DOCUMENT_TERMS_DELIMITER = "(\t|\r|\f| )*";
+
+    private static final String DOCUMENT_TERMS_DELIMITER = 
+            "\t\r\f!@#$%^&*;:'\".,0123456789()_-\\[\\]\\{\\}<>?|~`+-=/ \\'\b«»§΄―—’‘–°·";
+    private static final String IS_DOCUMENT_TERMS_DELIMITER = 
+            "\t\r\f!@#$%^&*;:'\".,0123456789()_-\\[\\]\\{\\}<>?|~`+-=/ \\'\b«»§΄―—’‘–°·";
     
     private static VocabularyInfoHolder vocHolder = null;
     private static TermNormalizer termNormalizer = null;
@@ -88,6 +91,7 @@ public class IndexManager {
                         if(term != null && !term.isEmpty()){
                             ++totalWordsInAllDocuments;
                             term = termNormalizer.stemTerm(term);
+                            //System.out.println(term);
                             indexTerm(documentWords, term, fileName, cntDocumentPointer, cntWord);
                         }
                     }

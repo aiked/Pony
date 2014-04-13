@@ -202,7 +202,7 @@ public class PonyUi extends javax.swing.JFrame {
 
     protected void onDocumentFolderSelected(String absolutePath) {
         this.documentsPath = absolutePath;
-        this.documentsIndexPath = documentsPath + "\\" + Configuration.INDEX_FOLDER_NAME;
+        this.documentsIndexPath = documentsPath + System.getProperty("file.separator") + Configuration.INDEX_FOLDER_NAME;
         if(DBReader.indexFilesExist(documentsIndexPath)){
             
          loadingVocabularyThread = (new Thread() {

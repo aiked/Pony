@@ -36,7 +36,7 @@ public class IndexingProcedurePanel extends javax.swing.JPanel {
         id_progressBar.setString("");
         id_progressBar.setStringPainted(true);
 
-        id_processStatusLabel.setText("indexing");
+        id_processStatusLabel.setText("Indexing phase");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

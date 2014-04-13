@@ -49,7 +49,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
@@ -98,7 +98,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="documentButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="documents"/>
+        <Property name="text" type="java.lang.String" value="Documents"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="documentButtonActionPerformed"/>
@@ -109,12 +109,12 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="18" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Select folders"/>
+        <Property name="text" type="java.lang.String" value="Select folders for indexing"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="indexingButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="indexing output"/>
+        <Property name="text" type="java.lang.String" value="Index directory"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indexingButtonActionPerformed"/>
@@ -122,8 +122,11 @@
     </Component>
     <Component class="javax.swing.JCheckBox" name="stopWordsEnable">
       <Properties>
-        <Property name="text" type="java.lang.String" value="stopWords"/>
+        <Property name="text" type="java.lang.String" value="Stop words"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stopWordsEnableActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JPanel" name="stopWordsWrapper">
 
@@ -131,9 +134,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="stopWordsOpenFolderButtom" min="-2" pref="115" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="stopWordsPathLabel" pref="350" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="stopWordsOpenFolderButtom" min="-2" pref="290" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="stopWordsPathLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="186" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -147,7 +152,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="stopWordsOpenFolderButtom">
           <Properties>
-            <Property name="text" type="java.lang.String" value="stopwords folder"/>
+            <Property name="text" type="java.lang.String" value="Select stop words directory"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="stopWordsPathLabel">
@@ -160,7 +165,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="start indexing"/>
+        <Property name="text" type="java.lang.String" value="Start Indexing"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JProgressBar" name="jProgressBar1">

@@ -1,9 +1,7 @@
 package PonySolution.core;
 
+
 import PonyDB.DBReader;
-import PonyDB.DBWriter;
-import PonyIndexer.IndexManager;
-import PonyIndexer.VocabularyInfoHolder;
 import PonySearcher.PageRankInfo;
 import PonySearcher.Search;
 import PonySearcher.VectorSpaceRankingPolicy;
@@ -20,7 +18,7 @@ public class Pony {
     public static Search Start(String documentPath, String stopWordsPath) 
             throws FileNotFoundException, IOException, ClassNotFoundException{
         
-        String collectionIndexPath = documentPath + "\\collectionIndex";
+        String collectionIndexPath = documentPath + System.getProperty("file.separator") + "collectionIndex";
         Search search;
         if(DBReader.indexFilesExist(collectionIndexPath)){   
             search = new Search(

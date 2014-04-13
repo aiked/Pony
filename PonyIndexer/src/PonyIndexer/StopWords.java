@@ -53,7 +53,7 @@ public class StopWords {
         }catch(Exception e){ System.err.println("Error: "+e.getMessage()); }
     }
     
-    public Boolean existWord( String word ){
+    public boolean existWord( String word ){
         return words.contains(word);
     }
     
@@ -61,12 +61,6 @@ public class StopWords {
         if(words.contains(word)){
             return null;
         }
-        word = word.replaceAll("[(){}[,.]\'\";!:_?—<\\->]", "");
-        
-        if(word.matches("\\d+")){
-            return null;
-        }
-        
         return word;
     }
     
