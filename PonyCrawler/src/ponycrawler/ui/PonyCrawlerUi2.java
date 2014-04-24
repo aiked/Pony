@@ -446,8 +446,10 @@ public class PonyCrawlerUi2 extends javax.swing.JFrame {
             onStopFetching();
         }else{
             monitorPanel.setVisible(true);
-            final Collection<? extends String> startingUrls = ListManager.getValuesFromList(startingLinks_links);
-            final Collection<? extends String> forbiddenUrls = ListManager.getValuesFromList(forbiddenLinks_links);
+            final Collection<? extends String> startingUrls = 
+                    ListManager.getValuesFromList(startingLinks_links);
+            final Collection<? extends String> forbiddenUrls = 
+                    forbiddenLinkesEnable ? ListManager.getValuesFromList(forbiddenLinks_links) : null;
             final String outputPath = OutputFile.getAbsolutePath();
             Object totalThreadsObj = parallelFetchesInput.getValue();
             if(totalThreadsObj==null)

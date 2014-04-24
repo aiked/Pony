@@ -52,7 +52,8 @@ public class CrawlerCore implements FetchingThreadNotifier {
             Collection<? extends String> forbitenUrls) 
             throws InterruptedException
     {
-        crawlerData.addForbitenUrlPatterns(forbitenUrls);
+        if(forbitenUrls!=null)
+            crawlerData.addForbitenUrlPatterns(forbitenUrls);
         crawlerData.addUrlsToBeFetched(urlsToBeFetched);
         
         while(fetchingThreadManager.hasRunningThreads() || crawlerData.hasPendingUrls()){
