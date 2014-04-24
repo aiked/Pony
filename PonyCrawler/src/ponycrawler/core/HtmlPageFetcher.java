@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -41,11 +39,11 @@ public class HtmlPageFetcher {
             return new PageInfo( url, extension, pageAsString, null );
   
         } catch (MalformedURLException ex) {
-            Logger.getLogger(HtmlPageFetcher.class.getName()).log(Level.SEVERE, null, ex);
+            
         } catch (IOException ex) {
-            Logger.getLogger(HtmlPageFetcher.class.getName()).log(Level.SEVERE, null, ex);
+           
         } catch (Exception ex){
-            Logger.getLogger(HtmlPageFetcher.class.getName()).log(Level.SEVERE, null, ex);
+           
         }
         return null;
     }

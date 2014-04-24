@@ -10,10 +10,10 @@ import java.util.ArrayList;
 public class PageInfo {
     public final static String SUPPORTEDEXT_HTML = "html";
 
-    private String url;
-    private String extension;
-    private String content;    
-    private ArrayList<String> links;
+    private final String url;
+    private final String extension;
+    private final String content;    
+    private final ArrayList<String> links;
 
     public PageInfo(String url, String extension, String content, ArrayList<String> links) {
         this.extension = extension;
@@ -35,7 +35,11 @@ public class PageInfo {
     }
     
     public String getFriendlyUrl() {
-        return url.replaceAll("[^0-9a-z]", "_");
+        String frindlyUrl = url.replaceAll("[^0-9a-z]", "_");
+        if(frindlyUrl.length()>200){
+            frindlyUrl = frindlyUrl.substring(frindlyUrl.length()-200);
+        }
+        return frindlyUrl;
     }
 
     public ArrayList<String> getLinks() {

@@ -6,6 +6,7 @@ package ponycrawler.core;
 
 public interface CrawlerListener {
     void startFetching(String url);
-    void pageFetched(PageInfo pageinfo);
-    void pageSaved(String path);
+    void pageSuccessFetched(PageInfo pageinfo, String storageLocation);
+    void pageFailFetched(String url);
+    void finishAllFetches();    
 }
