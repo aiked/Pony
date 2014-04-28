@@ -1,5 +1,7 @@
 package Common;
 
+import java.util.HashSet;
+import java.util.Set;
 import mitos.stemmer.Stemmer;
         
 /**
@@ -14,11 +16,18 @@ public class TermNormalizer {
             + "|\\\"|\\.|\\,|0|1|2|3|4|5|6|7|8|9|\\(|\\)|\\_|\\-|\\["
             + "|\\]|\\{|\\}|\\<|\\>|\\?|\\||\\~|\\`|\\+|\\-|\\=|\\/"
             + "|\\ |\\'|\\b|\\«|\\»|\\§|\\΄|\\―|\\’|\\‘|\\–|\\°|\\·)*";
+    
     private static TermNormalizer instance = null;
+    private Set<Character> delimiters;
     
     private TermNormalizer(){
         
         Stemmer.Initialize();
+        
+        delimiters = new HashSet();
+        for( char c : DOCUMENT_TERMS_DELIMITER.toCharArray()){
+            delimiters.add(c);
+        }
     }
     
     public static TermNormalizer getInstance(){
@@ -34,6 +43,10 @@ public class TermNormalizer {
     
     public String termToLowerCase( String term){
         return term.toLowerCase();
+    }
+    
+    public boolean isDelimiter( String term){
+        return delimiters.contains(term.charAt(0));
     }
     
     public String removePunctuation( String term){

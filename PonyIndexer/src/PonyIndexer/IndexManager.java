@@ -5,7 +5,6 @@ import PonyDB.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,8 +13,6 @@ import java.util.StringTokenizer;
 import Common.TermNormalizer;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -50,15 +47,20 @@ public class IndexManager {
         
         if(indexerListener!=null) indexerListener.onChangeIndexingState("Indexing...");
         StopWords stopWords = new StopWords();
+        
         if(StopWordsFolder!=null)
             stopWords.importFromFolder(StopWordsFolder);
+        
         ArrayList<String> fileList = DBReader.readFilesPathFromFolder(ResourcesFolder);
         vocHolder.setNumberOfDocuments((long)(fileList.size()));
+        
         if(indexerListener!=null) indexerListener.onNewIndexingMsg( vocHolder.getNumberOfDocuments() + " files");
+        
         long totalWordsInAllDocuments = 0L;
         long cntDocumentPointer = 0L;
         double singleDocumentPercent = (1.0/((double)vocHolder.getNumberOfDocuments()))*100;
         double cntDocumentPercent = 0.0;
+        
         DBWriter DBWriterInstance = PonyDB.DBWriter.getInstance();
         DBWriterInstance.openConnections(StorageFolder);
         
@@ -80,8 +82,9 @@ public class IndexManager {
                 while(tokenizer.hasMoreTokens() ) {
                     
                     String nextToken = tokenizer.nextToken();
-                    
-                    if(!nextToken.matches(TermNormalizer.IS_DOCUMENT_TERMS_DELIMITER)){
+
+                    if(!termNormalizer.isDelimiter(nextToken)){
+                    //if(!nextToken.matches(TermNormalizer.IS_DOCUMENT_TERMS_DELIMITER)){
                         
                         String term = nextToken;
                         
@@ -116,9 +119,11 @@ public class IndexManager {
         
         if(indexerListener!=null) indexerListener.onChangeIndexingState("Saving...");
         if(indexerListener!=null) indexerListener.onNewIndexingMsg( vocHolder.getSize() + " files");
+        
         Long postingInfoHolderfilePointer = 0L;
         double singlePostingInfoHolderPercent = (1.0/((double)vocHolder.getSize()*1.05))*100;
         double cntPostingInfoHolderPercent = 0.0;
+        
         for ( VocabularyInfo vocInfo : vocHolder.getMap().values()){         
             vocInfo.setPointer(postingInfoHolderfilePointer);
             postingInfoHolderfilePointer = DBWriterInstance.saveNextPostingInfoHolder
