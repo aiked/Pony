@@ -37,11 +37,12 @@ public class CrawlerData {
     }
     
     public void addForbitenUrlPattern(String urlPattern){
-        forbitenUrls.add(urlPattern);
+        forbitenUrls.add(".*" + urlPattern + ".*");
     }
     
     public void addForbitenUrlPatterns(Collection<? extends String> urlPatterns){
-        forbitenUrls.addAll(urlPatterns);
+        for(String urlPattern : urlPatterns)
+            addForbitenUrlPattern(urlPattern);
     }
     
     public boolean isExclusiveUrl(String url){
