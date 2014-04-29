@@ -29,7 +29,7 @@ public class Main {
                 Search search = new Search( "/Users/jit/Github/Pony/PonyIndexer/resources",
                                     "/Users/jit/Github/Pony/PonyIndexer/resources/stopWords"
                 , new VectorSpaceRankingPolicy() );
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection:0.2 daddy:1.2 lola:02 lola:0.3 lola:0.1 vasd: don't:23");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection:0.2 daddy:1.2 daddi:0.66 lola:0.1 lola:0.3 lola:0.a vasd: don't:23");
         
         
         while(!retrieveAndRank.isEmpty()){

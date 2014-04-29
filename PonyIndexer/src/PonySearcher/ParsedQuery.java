@@ -65,7 +65,7 @@ public class ParsedQuery {
         int maxFrequency = 0;
         HashMap<String, WordInfo> tmpTerms = new HashMap();
         ArrayList<ParsedQueryWord> parsedQueryWords = new ArrayList();
-        String word, nextWord;
+        String word, nextWord, weightString="";
         double weight = 0;
         
         StringTokenizer tokenizer = new StringTokenizer(query, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
@@ -84,16 +84,23 @@ public class ParsedQuery {
                     word = termNormalizer.stemTerm(word);
                     weight = 1.0;
                     // Get possible weight
-                    if (tokenizer.countTokens()>2){
-                        if( termNormalizer.isDoubleDot(tokenizer.nextToken())){
-                            if(tokenizer.nextToken().charAt(0) == '0' && tokenizer.nextToken().charAt(0) == '.')
-                                weight = Double.parseDouble("0."+tokenizer.nextToken());
-                        }
+                    if (tokenizer.countTokens()>2 && termNormalizer.isDoubleDot(tokenizer.nextToken())){
+                        if(tokenizer.nextToken().charAt(0) == '0' && tokenizer.nextToken().charAt(0) == '.')
+                            
+                            weightString="0.";
+                            char weightValue = tokenizer.nextToken().charAt(0);
+                           
+                            while(Character.isDigit(weightValue)){
+                                weightString += weightValue;
+                                weightValue = tokenizer.nextToken().charAt(0);
+                            }
+                            weight = Double.parseDouble(weightString);
+                            if(weight == 0){ weight = 1.0; }
                     }
                     
                     WordInfo wordInfo = tmpTerms.get(word);
                     if(wordInfo == null){
-                        tmpTerms.put(word, new WordInfo(1,weight));
+                        tmpTerms.put(word, new WordInfo( 1,weight));
                         maxFrequency = Math.max(maxFrequency, 1);
                     }
                     else{
@@ -104,7 +111,6 @@ public class ParsedQuery {
                 }
             }
         }
-        
         for( Map.Entry<String, WordInfo> tmpTerm : tmpTerms.entrySet() ){
             parsedQueryWords.add( 
                     new ParsedQueryWord( 
@@ -113,9 +119,9 @@ public class ParsedQuery {
                     );
         }
         
-        for (ParsedQueryWord pW : parsedQueryWords){
-            System.out.println(pW.getWord()+"  "+pW.getTf()+"  "+pW.getWeight());
-        }
+//        for (ParsedQueryWord pW : parsedQueryWords){
+//            System.out.println(pW.getWord()+"  "+pW.getTf()+"  "+pW.getWeight());
+//        }
         return parsedQueryWords;
     }
     
