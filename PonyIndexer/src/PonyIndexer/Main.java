@@ -30,9 +30,9 @@ public class Main {
         
         IndexManager index = IndexManager.getInstance();
         index.indexer( 
-                "/Users/jit/Github/Pony/PonyIndexer/resources/documentCollection",
-                "/Users/jit/Github/Pony/PonyIndexer/resources/stopWords",
-                "/Users/jit/Github/Pony/PonyIndexer/resources", null );
+                "/home/michath/Github/Pony/PonyIndexer/resources/documentCollection",
+                "/home/michath/Github/Pony/PonyIndexer/resources/stopWords",
+                "/home/michath/Github/Pony/PonyIndexer/resources", null );
         
     }
 }

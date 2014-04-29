@@ -26,10 +26,10 @@ public class Main {
 //                , new VectorSpaceRankingPolicy() );
 //        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection");
  
-                Search search = new Search( "/Users/jit/Github/Pony/PonyIndexer/resources",
-                                    "/Users/jit/Github/Pony/PonyIndexer/resources/stopWords"
+                Search search = new Search( "/home/michath/Github/Pony/PonyIndexer/resources",
+                                    "/home/michath/Github/Pony/PonyIndexer/resources/stopWords"
                 , new VectorSpaceRankingPolicy() );
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection:0.2 daddy:1.2 daddi:0.66 lola:0.1 lola:0.3 lola:0.a vasd: don't:23");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection:0.2 daddy:1.2 daddi:0.662312 lola:0.1 lola:0.3 xazos malakismeno lola:0.a vasd: don't:23");
         
         
         while(!retrieveAndRank.isEmpty()){

@@ -63,10 +63,10 @@ public class ParsedQuery {
     public ArrayList<ParsedQueryWord> parse(String query) {
 
         int maxFrequency = 0;
-        HashMap<String, WordInfo> tmpTerms = new HashMap();
+        HashMap<String,ParsedQueryWord> tmpTerms = new HashMap();
         ArrayList<ParsedQueryWord> parsedQueryWords = new ArrayList();
         String word, nextWord, weightString="";
-        double weight = 0;
+        double weight;
         
         StringTokenizer tokenizer = new StringTokenizer(query, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
         
@@ -98,72 +98,58 @@ public class ParsedQuery {
                             if(weight == 0){ weight = 1.0; }
                     }
                     
-                    WordInfo wordInfo = tmpTerms.get(word);
+                    ParsedQueryWord wordInfo = tmpTerms.get(word);
                     if(wordInfo == null){
-                        tmpTerms.put(word, new WordInfo( 1,weight));
+                        tmpTerms.put(word, new ParsedQueryWord( 1, word, weight));
                         maxFrequency = Math.max(maxFrequency, 1);
                     }
                     else{
                         wordInfo.incrementFrequency();
                         wordInfo.setWeight(weight);
-                        maxFrequency = Math.max(maxFrequency, wordInfo.getFreq());
+                        maxFrequency = Math.max(maxFrequency,(int)wordInfo.getTf());
                     }
                 }
             }
         }
-        for( Map.Entry<String, WordInfo> tmpTerm : tmpTerms.entrySet() ){
-            parsedQueryWords.add( 
-                    new ParsedQueryWord( 
-                        ((double)tmpTerm.getValue().getFreq())/((double)maxFrequency), 
-                        tmpTerm.getKey(), tmpTerm.getValue().getWeight() ) 
-                    );
+        
+        for( Map.Entry<String, ParsedQueryWord> tmpTerm : tmpTerms.entrySet() ){
+            ParsedQueryWord tmpWordInfo =  tmpTerm.getValue();
+            tmpWordInfo.setTf(tmpWordInfo.getTf()/((double)maxFrequency));
+            parsedQueryWords.add(tmpWordInfo);
         }
         
-//        for (ParsedQueryWord pW : parsedQueryWords){
-//            System.out.println(pW.getWord()+"  "+pW.getTf()+"  "+pW.getWeight());
-//        }
+        for (ParsedQueryWord pW : parsedQueryWords){
+            System.out.println(pW.getWord()+"  "+pW.getTf()+"  "+pW.getWeight());
+        }
+        
         return parsedQueryWords;
     }
     
     
-    public class WordInfo{
-        private int freq;
-        private double weight;
-        
-        public WordInfo(int freq, double weight){
-            this.freq = freq;
-            this.weight = weight;
-        }
-        
-        public void incrementFrequency(){
-            ++this.freq;
-        }
-        
-        public int getFreq() {
-            return freq;
-        }
-
-        public void setFreq(int freq) {
-            this.freq = freq;
-        }
-
-        public double getWeight() {
-            return weight;
-        }
-
-        public void setWeight(double weight) {
-            this.weight = weight;
-        }
-    }
-    
     public class ParsedQueryWord {
-        private final double tf;
-        private final String word;
-        private final double weight;
+        private double tf;
+        private String word;
+        private double weight;
 
         public ParsedQueryWord(double tf, String word, double weight) {
             this.tf = tf;
             this.word = word;
+            this.weight = weight;
+        }
+
+        public void incrementFrequency(){
+            ++this.tf;
+        }
+        
+        public void setTf(double tf) {
+            this.tf = tf;
+        }
+
+        public void setWord(String word) {
+            this.word = word;
+        }
+
+        public void setWeight(double weight) {
             this.weight = weight;
         }
 
