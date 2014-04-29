@@ -45,9 +45,14 @@ public class TermNormalizer {
         return term.toLowerCase();
     }
     
-    public boolean isDelimiter( String term){
+    public boolean isDelimiter( String term ){
         return delimiters.contains(term.charAt(0));
     }
+    
+    public boolean isDoubleDot( String term ){
+        return (term.charAt(0)==':');
+    }
+    
     
     public String removePunctuation( String term){
         

@@ -13,18 +13,24 @@ public class Main {
     public static void main(String[] args) 
             throws IOException, FileNotFoundException, ClassNotFoundException, Exception{
         
-        if (args.length < 3){
-            System.out.println("Error: Invalid variables. Try importing these absolute paths\n"+
-                    "java -jar PonySearcher.java <DocumentCollection> <StopWords> <\"Search String\"> ");
-            System.exit(1);
-        }
-        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank(args[2]);
+//        if (args.length < 3){
+//            System.out.println("Error: Invalid variables. Try importing these absolute paths\n"+
+//                    "java -jar PonySearcher.java <DocumentCollection> <StopWords> <\"Search String\"> ");
+//            System.exit(1);
+//        }
+//        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
+//        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank(args[2]);
         
 //        Search search = new Search( "D:\\github\\Pony\\PonyIndexer\\resources",
 //                                    "D:\\github\\Pony\\PonyIndexer\\resources\\stopWords"
 //                , new VectorSpaceRankingPolicy() );
 //        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection");
+ 
+                Search search = new Search( "/Users/jit/Github/Pony/PonyIndexer/resources",
+                                    "/Users/jit/Github/Pony/PonyIndexer/resources/stopWords"
+                , new VectorSpaceRankingPolicy() );
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection:0.2 daddy:1.2 lola:02 lola:0.3 lola:0.1 vasd: don't:23");
+        
         
         while(!retrieveAndRank.isEmpty()){
             PageRankInfo pageRankInfo = retrieveAndRank.poll();
