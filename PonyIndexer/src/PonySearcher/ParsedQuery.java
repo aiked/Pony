@@ -65,51 +65,43 @@ public class ParsedQuery {
         int maxFrequency = 0;
         HashMap<String,ParsedQueryWord> tmpTerms = new HashMap();
         ArrayList<ParsedQueryWord> parsedQueryWords = new ArrayList();
-        String word, nextWord, weightString="";
+        String weightString="";
         double weight;
         
         StringTokenizer tokenizer = new StringTokenizer(query, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
         
         while(tokenizer.hasMoreTokens() ) {
-            word = tokenizer.nextToken();
             
-            if(!termNormalizer.isDelimiter(word)){
-                word = termNormalizer.termToLowerCase(word);
-                if(termNormalizer.isTermGreek(word)){
-                    word = termNormalizer.removePunctuation(word);
+            String word = termNormalizer.getLexicalAnalyzedTerm(tokenizer.nextToken(), stopWords);
+            if(word!=null){
+                weight = 1.0;
+                // Get possible weight
+                if (tokenizer.countTokens()>2 && termNormalizer.isDoubleDot(tokenizer.nextToken())){
+                    if(tokenizer.nextToken().charAt(0) == '0' && tokenizer.nextToken().charAt(0) == '.')
+
+                        weightString="0.";
+                        char weightValue = tokenizer.nextToken().charAt(0);
+
+                        while(Character.isDigit(weightValue)){
+                            weightString += weightValue;
+                            weightValue = tokenizer.nextToken().charAt(0);
+                        }
+                        weight = Double.parseDouble(weightString);
+                        if(weight == 0){ weight = 1.0; }
                 }
-                word = stopWords.getValidTerm(word);
-                if(word!=null && !word.isEmpty()){
-                   
-                    word = termNormalizer.stemTerm(word);
-                    weight = 1.0;
-                    // Get possible weight
-                    if (tokenizer.countTokens()>2 && termNormalizer.isDoubleDot(tokenizer.nextToken())){
-                        if(tokenizer.nextToken().charAt(0) == '0' && tokenizer.nextToken().charAt(0) == '.')
-                            
-                            weightString="0.";
-                            char weightValue = tokenizer.nextToken().charAt(0);
-                           
-                            while(Character.isDigit(weightValue)){
-                                weightString += weightValue;
-                                weightValue = tokenizer.nextToken().charAt(0);
-                            }
-                            weight = Double.parseDouble(weightString);
-                            if(weight == 0){ weight = 1.0; }
-                    }
-                    
-                    ParsedQueryWord wordInfo = tmpTerms.get(word);
-                    if(wordInfo == null){
-                        tmpTerms.put(word, new ParsedQueryWord( 1, word, weight));
-                        maxFrequency = Math.max(maxFrequency, 1);
-                    }
-                    else{
-                        wordInfo.incrementFrequency();
-                        wordInfo.setWeight(weight);
-                        maxFrequency = Math.max(maxFrequency,(int)wordInfo.getTf());
-                    }
+
+                ParsedQueryWord wordInfo = tmpTerms.get(word);
+                if(wordInfo == null){
+                    tmpTerms.put(word, new ParsedQueryWord( 1, word, weight));
+                    maxFrequency = Math.max(maxFrequency, 1);
+                }
+                else{
+                    wordInfo.incrementFrequency();
+                    wordInfo.setWeight(weight);
+                    maxFrequency = Math.max(maxFrequency,(int)wordInfo.getTf());
                 }
             }
+            
         }
         
         for( Map.Entry<String, ParsedQueryWord> tmpTerm : tmpTerms.entrySet() ){

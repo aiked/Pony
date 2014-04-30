@@ -1,5 +1,6 @@
 package Common;
 
+import PonyIndexer.StopWords;
 import java.util.HashSet;
 import java.util.Set;
 import mitos.stemmer.Stemmer;
@@ -11,14 +12,8 @@ import mitos.stemmer.Stemmer;
 public class TermNormalizer {
     public static final String DOCUMENT_TERMS_DELIMITER = 
             "\t\r\f!@#$%^&*;:'\".,0123456789()_-\\[\\]\\{\\}<>?|~`+-=/  \\'\b«»§΄―—’‘–°·";
-    public static final String IS_DOCUMENT_TERMS_DELIMITER = 
-            "(\\t|\\r|\\f|\\!|\\@|\\#|\\$|\\%|\\^|\\&|\\*|\\;|\\:|\\'"
-            + "|\\\"|\\.|\\,|0|1|2|3|4|5|6|7|8|9|\\(|\\)|\\_|\\-|\\["
-            + "|\\]|\\{|\\}|\\<|\\>|\\?|\\||\\~|\\`|\\+|\\-|\\=|\\/"
-            + "|\\ |\\'|\\b|\\«|\\»|\\§|\\΄|\\―|\\’|\\‘|\\–|\\°|\\·)*";
-    
     private static TermNormalizer instance = null;
-    private Set<Character> delimiters;
+    private final Set<Character> delimiters;
     
     private TermNormalizer(){
         
@@ -104,4 +99,18 @@ public class TermNormalizer {
         }
         return count;
     }
+    
+    public String getLexicalAnalyzedTerm(String term, StopWords stopWords){
+        if(isDelimiter(term))
+            return null;
+        else{
+            term = termToLowerCase(term);
+            if(isTermGreek(term)){
+                term = removePunctuation(term);
+            }
+            term = stopWords.getValidTerm(term);
+            return term!=null && !term.isEmpty() ? stemTerm(term) : null;
+        }
+    }
+        
 }

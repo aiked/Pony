@@ -80,28 +80,13 @@ public class IndexManager {
                 StringTokenizer tokenizer = new StringTokenizer(line, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
 
                 while(tokenizer.hasMoreTokens() ) {
-                    
-                    String nextToken = tokenizer.nextToken();
-
-                    if(!termNormalizer.isDelimiter(nextToken)){
-                    //if(!nextToken.matches(TermNormalizer.IS_DOCUMENT_TERMS_DELIMITER)){
-                        
-                        String term = nextToken;
-                        
-                        term = termNormalizer.termToLowerCase(term);
-                        if(termNormalizer.isTermGreek(term)){
-                            term = termNormalizer.removePunctuation(term);
-                        }
-                        term = stopWords.getValidTerm(term);
-                        
-                        if(term != null && !term.isEmpty()){
-                            ++totalWordsInAllDocuments;
-                            term = termNormalizer.stemTerm(term);
-                            //System.out.println(term);
-                            indexTerm(documentWords, term, fileName, cntDocumentPointer, cntWord);
-                        }
+                    String token = tokenizer.nextToken();
+                    String term = termNormalizer.getLexicalAnalyzedTerm(token, stopWords);
+                    if(term != null){
+                        ++totalWordsInAllDocuments;
+                        indexTerm(documentWords, term, fileName, cntDocumentPointer, cntWord);
                     }
-                    cntWord += (long) TermNormalizer.countUTF8Stringlength(nextToken);
+                    cntWord += (long) TermNormalizer.countUTF8Stringlength(token);
                 }
                 cntWord+=2;
             }

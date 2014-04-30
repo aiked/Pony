@@ -9,13 +9,16 @@ import java.util.ArrayList;
  */
 public class PageRankInfo {
     private long docId;
+    private double numeratorRank;
+    private double denominatorWordRank;
+    private double denominatorQueryRank;
     private double rank;
     private ArrayList<String> snippets;
     private RandomAccessFile documentFile;
     private String documentPath;
 
     public PageRankInfo(long docId, String docPath, RandomAccessFile documentFile) {
-        rank = 0.0;
+        denominatorQueryRank = denominatorWordRank = numeratorRank = rank = 0.0;
         snippets = new ArrayList();
         this.docId = docId;
         this.documentFile = documentFile;
@@ -35,8 +38,8 @@ public class PageRankInfo {
         this.snippets.addAll(snippets);
     }
     
-    public void addRank(double rank){
-        this.rank += rank;
+    public void calculateRank(){
+        this.rank = rank;
     }
 
     public double getRank() {
@@ -57,6 +60,30 @@ public class PageRankInfo {
 
     public String getDocumentPath() {
         return documentPath;
+    }
+
+    public double getNumeratorRank() {
+        return numeratorRank;
+    }
+
+    public void addNumeratorRank(double numeratorRank) {
+        this.numeratorRank += numeratorRank;
+    }
+
+    public double getDenominatorWordRank() {
+        return denominatorWordRank;
+    }
+
+    public void addDenominatorWordRank(double denominatorWordRank) {
+        this.denominatorWordRank += denominatorWordRank;
+    }
+
+    public double getDenominatorQueryRank() {
+        return denominatorQueryRank;
+    }
+
+    public void addDenominatorQueryRank(double denominatorQueryRank) {
+        this.denominatorQueryRank += denominatorQueryRank;
     }
 
     
