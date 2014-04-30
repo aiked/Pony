@@ -22,5 +22,22 @@ public class VectorSpaceRankingPolicy implements PageRankingPolicy{
     public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder, VocabularyInfo vocabularyInfo) {
         return vocabularyInfo.getIdf()*value.getTf();
     }
+
+    @Override
+    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryWord parsedQueryWord) {
+        pageRankInfo.addRank(termRank*docRank);//*parsedQueryWord.getWeight());
+        pageRankInfo.addDenominatorWordRank(docRank*docRank);
+        pageRankInfo.addDenominatorQueryRank(termRank*termRank);
+    }
+
+    @Override
+    public void calculateRank(PageRankInfo pageRankInfo) {
+        pageRankInfo.setRank( 
+                Math.sqrt( 
+                    pageRankInfo.getDenominatorQueryRank()
+                    *pageRankInfo.getDenominatorWordRank() 
+                )
+            );
+    }
     
 }

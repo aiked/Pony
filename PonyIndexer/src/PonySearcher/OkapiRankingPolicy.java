@@ -24,5 +24,15 @@ public class OkapiRankingPolicy  implements PageRankingPolicy{
         return value.getTf() * ( 2.0 + 0.75 ) 
             / value.getTf() + 2.0 * ( 1 - 0.75 + 0.75 * ( documentInfo.getTotalTerm() / vocabularyInfoHolder.getAvgDocumentsTerm() ) );
     }
+
+    @Override
+    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQuery.ParsedQueryWord parsedQueryWord) {
+        pageRankInfo.addRank(termRank*docRank);
+    }
+
+    @Override
+    public void calculateRank(PageRankInfo pageRankInfo) {
+        
+    }
     
 }

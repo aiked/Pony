@@ -38,8 +38,12 @@ public class PageRankInfo {
         this.snippets.addAll(snippets);
     }
     
-    public void calculateRank(){
+    public void setRank(double rank){
         this.rank = rank;
+    }
+    
+    public void addRank(double rank){
+        this.rank += rank;
     }
 
     public double getRank() {

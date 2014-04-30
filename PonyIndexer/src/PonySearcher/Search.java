@@ -63,7 +63,7 @@ public class Search {
                         dbReader.loadPostingInfoHolder(vocabularyInfo.getPointer());
 
                 double rankOfTerm = pageRankingPolicy.rankTerm(vocabularyInfo, parsedQueryWord, vocabularyInfoHolder, postingInfoHolder);
-                double rankOfTermSqr = rankOfTerm*rankOfTerm;
+
                 for( PostingInfo postingInfo : postingInfoHolder.getAllInfo().values() ){
                     DocumentInfo documentInfo = dbReader.loadDocumentInfo(postingInfo.getId());
                     if(documentInfo==null){
@@ -78,9 +78,7 @@ public class Search {
                         }
                         double rankOfDoc = pageRankingPolicy.rankDocument(postingInfo, documentInfo, vocabularyInfoHolder, vocabularyInfo);
                         
-                        pageRankInfo.addRank(rankOfTerm*rankOfDoc);
-                        pageRankInfo.addDenominatorWordRank(rankOfDoc*rankOfDoc);
-                        pageRankInfo.addDenominatorQueryRank(rankOfTermSqr);
+                        pageRankingPolicy.addRank(pageRankInfo, rankOfTerm, rankOfDoc, parsedQueryWord);
                         ArrayList<String> snippets = SnippetGenerator.generate(
                                                         pageRankInfo.getDocumentFile(), 
                                                         parsedQueryWord.getWord(), 
@@ -101,7 +99,7 @@ public class Search {
                 );
             for(PageRankInfo pageRankInfo : tmpPagesRankInfo.values()){
                 dbReader.closeDocument(pageRankInfo.getDocumentFile());
-                pageRankInfo.setRank();
+                pageRankingPolicy.calculateRank(pageRankInfo);
                 pagesRankInfo.add(pageRankInfo);
             }
             return pagesRankInfo;

@@ -1,6 +1,7 @@
 
 package PonySearcher;
 
+import Common.TermNormalizer;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -42,17 +43,30 @@ public class SnippetGenerator {
         
         file.read(buffer);
         
-        byte buf_start;
-        byte buf_end = (byte)(length);
-        byte i =0;
-        
-        while( i<length && buffer[++i]!=' '){;}
-        buf_start = i;
-        while( buf_end>0 && buffer[--buf_end]!=' '){;}
-        
-        String snippet = new String(buffer,buf_start+1,buf_end-buf_start, "UTF-8");
+        String snippet = new String(buffer, "UTF-8");
+        StringBuilder snippetToBuild = new StringBuilder(snippet);
+        long termPos = position-pStart;
+        snippetToBuild.insert((int) termPos, "<b>");
+        int termLength = TermNormalizer.countUTF8Stringlength(term);
+        snippetToBuild.insert((int) (termPos+termLength), "</b>");
+               
+        for(int i=0; i<snippetToBuild.length();){
+            char schar = snippetToBuild.charAt(i);
+            if(schar==' '){
+                snippetToBuild.deleteCharAt(i);
+            }else
+                break;
+        }
+
+        for(int i=snippetToBuild.length()-1; i!=-1; --i){
+            char schar = snippetToBuild.charAt(i);
+            if(schar==' '){
+                snippetToBuild.deleteCharAt(i);
+            }else
+                break;
+        }
+        snippet = snippetToBuild.toString();
         snippet = snippet.replaceAll("\\s+", " ");
-        snippet = snippet.replaceAll(term, "<b>" + term + "</b>");
         return snippet;
     }
 }
