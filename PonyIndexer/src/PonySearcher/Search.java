@@ -78,7 +78,7 @@ public class Search {
                         }
                         double rankOfDoc = pageRankingPolicy.rankDocument(postingInfo, documentInfo, vocabularyInfoHolder, vocabularyInfo);
                         
-                        pageRankInfo.addRank(rankOfTerm*rankOfDoc);
+                        pageRankInfo.addRank((rankOfTerm*rankOfDoc)*parsedQueryWord.getWeight());
                         ArrayList<String> snippets = SnippetGenerator.generate(
                                                         pageRankInfo.getDocumentFile(), 
                                                         parsedQueryWord.getWord(), 
