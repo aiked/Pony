@@ -44,6 +44,10 @@ public class TermNormalizer {
         return delimiters.contains(term.charAt(0));
     }
     
+    public boolean isDelimiter( char tcar ){
+        return delimiters.contains(tcar);
+    }
+    
     public boolean isDoubleDot( String term ){
         return (term.charAt(0)==':');
     }

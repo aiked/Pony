@@ -20,16 +20,19 @@ public class Main {
 //        }
 //        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
 //        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank(args[2]);
+//                        Search search = new Search( "/home/michath/Github/Pony/PonyIndexer/resources",
+//                                    "/home/michath/Github/Pony/PonyIndexer/resources/stopWords"
+        
         
 //        Search search = new Search( "D:\\github\\Pony\\PonyIndexer\\resources",
 //                                    "D:\\github\\Pony\\PonyIndexer\\resources\\stopWords"
 //                , new VectorSpaceRankingPolicy() );
 //        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("injection");
  
-                Search search = new Search( "/home/michath/Github/Pony/PonyIndexer/resources",
-                                    "/home/michath/Github/Pony/PonyIndexer/resources/stopWords"
+                Search search = new Search( "D:\\\\github\\Pony\\PonyIndexer\\resources\\documentCollection\\collectionIndex",
+                                    "D:\\\\github\\Pony\\PonyIndexer\\resources\\stopWords"
                 , new VectorSpaceRankingPolicy() );
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("lola malakas xazos vlakas karkinos");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("παίζω");
         
         
         while(!retrieveAndRank.isEmpty()){
