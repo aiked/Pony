@@ -5,8 +5,9 @@ import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
-import PonySearcher.PageRankInfo;
 import PonySearcher.ParsedQuery;
+import PonySearcher.models.PageRankInfo;
+import PonySearcher.models.ParsedQueryTerm;
 
 /**
  *
@@ -15,7 +16,7 @@ import PonySearcher.ParsedQuery;
 public class OkapiRankingPolicy  implements PageRankingPolicy{
 
     @Override
-    public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQuery.ParsedQueryWord parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder) {
+    public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQueryTerm parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder) {
         double size = postingInfoHolder.getAllInfo().size();
         return ( (double) ( vocabularyInfoHolder.getNumberOfDocuments() - size + 0.5 ))
                 / ( size + 0.5 );
@@ -28,7 +29,7 @@ public class OkapiRankingPolicy  implements PageRankingPolicy{
     }
 
     @Override
-    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQuery.ParsedQueryWord parsedQueryWord) {
+    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryTerm parsedQueryWord) {
         pageRankInfo.addRank(termRank*docRank);
     }
 

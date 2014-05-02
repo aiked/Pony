@@ -1,4 +1,4 @@
-package PonySearcher;
+package PonySearcher.models;
 
 import java.io.RandomAccessFile;
 import java.util.ArrayList;

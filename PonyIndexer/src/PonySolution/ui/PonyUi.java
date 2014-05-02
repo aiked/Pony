@@ -11,7 +11,7 @@ import PonyIndexer.IndexManager;
 import PonyIndexer.IndexerListener;
 import PonyIndexer.VocabularyInfoHolder;
 import PonySearcher.ranking.OkapiRankingPolicy;
-import PonySearcher.PageRankInfo;
+import PonySearcher.models.PageRankInfo;
 import PonySearcher.Search;
 import PonySearcher.ranking.VectorSpaceRankingPolicy;
 import java.io.FileNotFoundException;

@@ -1,5 +1,6 @@
 package PonySearcher;
 
+import PonySearcher.models.ParsedQueryTerm;
 import Common.TermNormalizer;
 import PonyIndexer.StopWords;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ParsedQuery {
 //        ArrayList<ParsedQueryWord> parsedQueryWords = new ArrayList( tmpTerms.size() );
 //        for( Map.Entry<String, Integer> tmpTerm : tmpTerms.entrySet() ){
 //            parsedQueryWords.add( 
-//                    new ParsedQueryWord( 
+//                    new ParsedQueryTerm( 
 //                        ((double)tmpTerm.getValue())/((double)maxFrequency), 
 //                        tmpTerm.getKey(), 0 ) 
 //                    );
@@ -60,11 +61,11 @@ public class ParsedQuery {
 //        return parsedQueryWords;
 //    }
     
-    public ArrayList<ParsedQueryWord> parse(String query) {
+    public ArrayList<ParsedQueryTerm> parse(String query) {
 
         int maxFrequency = 0;
-        HashMap<String,ParsedQueryWord> tmpTerms = new HashMap();
-        ArrayList<ParsedQueryWord> parsedQueryWords = new ArrayList();
+        HashMap<String,ParsedQueryTerm> tmpTerms = new HashMap();
+        ArrayList<ParsedQueryTerm> parsedQueryWords = new ArrayList();
         String weightString="";
         double weight;
         
@@ -90,9 +91,9 @@ public class ParsedQuery {
                         if(weight == 0){ weight = 1.0; }
                 }
 
-                ParsedQueryWord wordInfo = tmpTerms.get(word);
+                ParsedQueryTerm wordInfo = tmpTerms.get(word);
                 if(wordInfo == null){
-                    tmpTerms.put(word, new ParsedQueryWord( 1, word, weight));
+                    tmpTerms.put(word, new ParsedQueryTerm( 1, word, weight));
                     maxFrequency = Math.max(maxFrequency, 1);
                 }
                 else{
@@ -104,58 +105,16 @@ public class ParsedQuery {
             
         }
         
-        for( Map.Entry<String, ParsedQueryWord> tmpTerm : tmpTerms.entrySet() ){
-            ParsedQueryWord tmpWordInfo =  tmpTerm.getValue();
+        for( Map.Entry<String, ParsedQueryTerm> tmpTerm : tmpTerms.entrySet() ){
+            ParsedQueryTerm tmpWordInfo =  tmpTerm.getValue();
             tmpWordInfo.setTf(tmpWordInfo.getTf()/((double)maxFrequency));
             parsedQueryWords.add(tmpWordInfo);
         }
         
-        for (ParsedQueryWord pW : parsedQueryWords){
+        for (ParsedQueryTerm pW : parsedQueryWords){
             System.out.println(pW.getWord()+"  "+pW.getTf()+"  "+pW.getWeight());
         }
         
         return parsedQueryWords;
     }
-    
-    
-    public class ParsedQueryWord {
-        private double tf;
-        private String word;
-        private double weight;
-
-        public ParsedQueryWord(double tf, String word, double weight) {
-            this.tf = tf;
-            this.word = word;
-            this.weight = weight;
-        }
-
-        public void incrementFrequency(){
-            ++this.tf;
-        }
-        
-        public void setTf(double tf) {
-            this.tf = tf;
-        }
-
-        public void setWord(String word) {
-            this.word = word;
-        }
-
-        public void setWeight(double weight) {
-            this.weight = weight;
-        }
-
-        public double getTf() {
-            return tf;
-        }
-
-        public String getWord() {
-            return word;
-        }
-        
-        public double getWeight(){
-            return weight;
-        }
-    }
-    
 }

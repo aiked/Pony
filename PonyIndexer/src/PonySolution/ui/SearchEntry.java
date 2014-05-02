@@ -5,7 +5,7 @@
 package PonySolution.ui;
 
 import PonyDB.DBReader;
-import PonySearcher.PageRankInfo;
+import PonySearcher.models.PageRankInfo;
 import java.awt.Desktop;
 import static java.awt.image.ImageObserver.WIDTH;
 import java.io.File;

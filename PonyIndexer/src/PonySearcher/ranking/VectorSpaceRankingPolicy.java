@@ -5,8 +5,8 @@ import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
-import PonySearcher.PageRankInfo;
-import PonySearcher.ParsedQuery.ParsedQueryWord;
+import PonySearcher.models.PageRankInfo;
+import PonySearcher.models.ParsedQueryTerm;
 
 /**
  *
@@ -15,7 +15,7 @@ import PonySearcher.ParsedQuery.ParsedQueryWord;
 public class VectorSpaceRankingPolicy implements PageRankingPolicy{
 
     @Override
-    public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQueryWord parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder) {
+    public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQueryTerm parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder) {
         return vocabularyInfo.getIdf()*parsedQueryWord.getTf();
     }
     
@@ -25,7 +25,7 @@ public class VectorSpaceRankingPolicy implements PageRankingPolicy{
     }
 
     @Override
-    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryWord parsedQueryWord) {
+    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryTerm parsedQueryWord) {
         pageRankInfo.addRank(termRank*docRank);//*parsedQueryWord.getWeight());
         pageRankInfo.addDenominatorWordRank(docRank*docRank);
         pageRankInfo.addDenominatorQueryRank(termRank*termRank);

@@ -1,5 +1,7 @@
 package PonySearcher;
 
+import PonySearcher.models.ParsedQueryTerm;
+import PonySearcher.models.PageRankInfo;
 import PonySearcher.ranking.PageRankingPolicy;
 import PonyDB.DBReader;
 import PonyIndexer.DocumentInfo;
@@ -7,7 +9,6 @@ import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
-import PonySearcher.ParsedQuery.ParsedQueryWord;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -54,8 +55,8 @@ public class Search {
 
         HashMap <Long, PageRankInfo> tmpPagesRankInfo = new HashMap();
 
-        ArrayList<ParsedQueryWord> parsedQueryWords = parsedQuery.parse(query);
-        for(ParsedQueryWord parsedQueryWord : parsedQueryWords){
+        ArrayList<ParsedQueryTerm> parsedQueryWords = parsedQuery.parse(query);
+        for(ParsedQueryTerm parsedQueryWord : parsedQueryWords){
             VocabularyInfo vocabularyInfo = vocabularyInfoHolder.get(parsedQueryWord.getWord());
             if( vocabularyInfo!=null ){
                

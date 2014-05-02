@@ -34,3 +34,6 @@ manifest.mf
 # Project specific folders
 collectionIndex/
 Figures/*.pdf
+
+# uwn Database
+uwnDatabase/

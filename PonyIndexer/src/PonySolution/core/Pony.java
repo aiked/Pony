@@ -2,7 +2,7 @@ package PonySolution.core;
 
 
 import PonyDB.DBReader;
-import PonySearcher.PageRankInfo;
+import PonySearcher.models.PageRankInfo;
 import PonySearcher.Search;
 import PonySearcher.ranking.VectorSpaceRankingPolicy;
 import java.io.FileNotFoundException;

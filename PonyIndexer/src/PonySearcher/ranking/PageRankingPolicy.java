@@ -5,9 +5,8 @@ import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
-import PonySearcher.PageRankInfo;
-import PonySearcher.ParsedQuery;
-import PonySearcher.ParsedQuery.ParsedQueryWord;
+import PonySearcher.models.PageRankInfo;
+import PonySearcher.models.ParsedQueryTerm;
 
 /**
  *
@@ -15,8 +14,8 @@ import PonySearcher.ParsedQuery.ParsedQueryWord;
  */
 public interface PageRankingPolicy {
     
-    public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQuery.ParsedQueryWord parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder);
+    public double rankTerm(VocabularyInfo vocabularyInfo, ParsedQueryTerm parsedQueryWord, VocabularyInfoHolder vocabularyInfoHolder, PostingInfoHolder postingInfoHolder);
     public double rankDocument(PostingInfo value, DocumentInfo documentInfo, VocabularyInfoHolder vocabularyInfoHolder, VocabularyInfo vocabularyInfo);
-    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryWord parsedQueryWord);
+    public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryTerm parsedQueryWord);
     public void calculateRank(PageRankInfo pageRankInfo);
 }

@@ -4,7 +4,7 @@
  */
 package PonySolution.ui;
 
-import PonySearcher.PageRankInfo;
+import PonySearcher.models.PageRankInfo;
 import java.awt.Dimension;
 import java.util.PriorityQueue;
 

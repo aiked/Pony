@@ -1,5 +1,6 @@
 package PonySearcher;
 
+import PonySearcher.models.PageRankInfo;
 import PonySearcher.ranking.VectorSpaceRankingPolicy;
 import java.io.FileNotFoundException;
 import java.io.IOException;
