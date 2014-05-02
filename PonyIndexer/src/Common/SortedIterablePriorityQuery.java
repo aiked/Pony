@@ -1,5 +1,6 @@
 package Common;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
@@ -8,9 +9,17 @@ import java.util.PriorityQueue;
  * @author Apostolidis
  * @param <T>
  */
-public class SortedIterablePriorityQuery<T> extends PriorityQueue{
+public class SortedIterablePriorityQuery<T> extends PriorityQueue<T>{
     public SortedIterable<T> sortedIterator(){
         return new SortedIterable<>(this);
+    }
+    
+    public SortedIterablePriorityQuery(){
+        super();
+    }
+    
+    public SortedIterablePriorityQuery(int capasity, Comparator comparator){
+        super(capasity, comparator);
     }
     
     public class SortedIterable<T> implements Iterator
