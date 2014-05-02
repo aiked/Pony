@@ -33,24 +33,31 @@ public class SnippetGenerator {
    
     @SuppressWarnings("empty-statement")
     public static String generateSingle(RandomAccessFile file, String term, Long position) throws IOException{
-        long pStart = Math.max( position-S_OFFSET_START, 0);
-        // 7 is the byte length of <b></b>
-        long pEnd = Math.min( position + term.length() + S_OFFSET_END + 7, file.length() );
+        int offsetStart = S_OFFSET_START;
+        int offsetEnd = S_OFFSET_END;
+        if(TermNormalizer.countUTF8Stringlength(term)!=term.length()){
+            offsetStart *= 2;
+            offsetEnd *= 2;
+        }
         
-        long length = (pEnd - pStart);
+        long pStart = Math.max( position-offsetStart, 0);
+        // 7 is the byte length of <b></b>
+        long pEnd = Math.min( position + term.length() + offsetEnd + 7, file.length() );
+        
+        int length = (int) (pEnd - pStart);
         
         file.seek(pStart);
-        byte[] buffer = new byte[(int)(length)];
+        byte[] buffer = new byte[length];
         
         file.read(buffer);
  
-        byte termPosStart = (byte) (position-pStart);
+        int termPosStart =  (int) (position-pStart);
         
         TermNormalizer termNormalizer = TermNormalizer.getInstance();
-        byte termPosEnd = termPosStart;
+        int termPosEnd = termPosStart;
         while(termPosEnd<length && !termNormalizer.isDelimiter( (char) buffer[termPosEnd]) ){ ++termPosEnd; }
         
-        for(byte j=(byte) (length-1); j>=termPosStart; --j){
+        for(int j= length-1; j>=termPosStart; --j){
             // 3 is the byte length of <b>
             buffer[j]=buffer[j-3];
         }
@@ -58,7 +65,7 @@ public class SnippetGenerator {
         buffer[termPosStart+1] = 'b';
         buffer[termPosStart+2] = '>';
   
-        for(byte j=(byte) (length-1); j>=(termPosEnd+3); --j){
+        for(int j= length-1; j>=(termPosEnd+3); --j){
             // 3 is the byte length of </b>
             buffer[j]=buffer[j-4];
         }
@@ -67,9 +74,9 @@ public class SnippetGenerator {
         buffer[termPosEnd+3+2] = 'b';
         buffer[termPosEnd+3+3] = '>';
         
-        byte buf_start;
-        byte buf_end = (byte)(length);
-        byte i =0;
+        int buf_start;
+        int buf_end = length;
+        int i =0;
         while( i<length && buffer[++i]!=' '){;}
         buf_start = i;
         while( buf_end>buf_start && buffer[--buf_end]!=' '){;}

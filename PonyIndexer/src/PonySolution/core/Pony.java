@@ -4,7 +4,7 @@ package PonySolution.core;
 import PonyDB.DBReader;
 import PonySearcher.PageRankInfo;
 import PonySearcher.Search;
-import PonySearcher.VectorSpaceRankingPolicy;
+import PonySearcher.ranking.VectorSpaceRankingPolicy;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.PriorityQueue;

@@ -1,10 +1,12 @@
-package PonySearcher;
+package PonySearcher.ranking;
 
 import PonyIndexer.DocumentInfo;
 import PonyIndexer.PostingInfo;
 import PonyIndexer.PostingInfoHolder;
 import PonyIndexer.VocabularyInfo;
 import PonyIndexer.VocabularyInfoHolder;
+import PonySearcher.PageRankInfo;
+import PonySearcher.ParsedQuery;
 import PonySearcher.ParsedQuery.ParsedQueryWord;
 
 /**

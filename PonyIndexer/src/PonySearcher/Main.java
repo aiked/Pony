@@ -1,5 +1,6 @@
 package PonySearcher;
 
+import PonySearcher.ranking.VectorSpaceRankingPolicy;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.PriorityQueue;
@@ -32,7 +33,7 @@ public class Main {
                 Search search = new Search( "D:\\\\github\\Pony\\PonyIndexer\\resources\\documentCollection\\collectionIndex",
                                     "D:\\\\github\\Pony\\PonyIndexer\\resources\\stopWords"
                 , new VectorSpaceRankingPolicy() );
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("παίζω");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("playing");
         
         
         while(!retrieveAndRank.isEmpty()){

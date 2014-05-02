@@ -1,5 +1,6 @@
 package PonySearcher;
 
+import PonySearcher.ranking.PageRankingPolicy;
 import PonyDB.DBReader;
 import PonyIndexer.DocumentInfo;
 import PonyIndexer.PostingInfo;
