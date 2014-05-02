@@ -86,6 +86,22 @@ public class TermNormalizer {
                     ||(c=='ί')||(c=='ό')||(c=='ύ')||(c=='ώ'));
     }
     
+    public static String getLanguage(String term) {
+        // Java uses Unicode
+        // Modern Greek in unicode are between 0370 - 03FF
+        // Basic Latin 0021 - 007E
+        char c = term.charAt(0); // Get the first character of the word
+        if (c >= (char) 880 && c <= (char) 1023) {
+            // If character is between 0x0370 - 0x03FF
+            return "ell"; // return the greek
+        } else if (c >= (char) 33 && c <= (char) 126) {
+            // If character is // between 0x0021 - 0x007E
+            return "eng"; // return english language
+        } else {
+            return null; // In all other cases return again eng
+        }
+    }
+    
     public static int countUTF8Stringlength(CharSequence sequence) {
         int count = 0;
         for (int i = 0, len = sequence.length(); i < len; ++i) {
