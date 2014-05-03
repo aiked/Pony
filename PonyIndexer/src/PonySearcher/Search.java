@@ -26,6 +26,8 @@ public class Search {
     private ParsedQuery parsedQuery;
     private Rank ranker;
     private QueryOptimizer queryOptimizer;
+    private PriorityQueue<PageRankInfo> rankTerms;
+    private List<String> relatedQueries;
     
     public Search(
             String collectionIndexPath, 
@@ -63,16 +65,22 @@ public class Search {
         queryOptimizer = QueryOptimizer.getSingleInst();
     }
 
-    public PriorityQueue<PageRankInfo> retrieveAndRank(String query) 
+    public PriorityQueue<PageRankInfo> getRankTerms(){
+        return this.rankTerms;
+    }
+    
+    public List<String> getRelatedQueries(){
+        return this.relatedQueries;
+    }
+    
+    public void submitQuery(String query) 
         throws IOException, Exception{
 
         ArrayList<ParsedQueryTerm> parsedQueryWords = parsedQuery.parse(query);
         
         QueryOptimizer.Query optimizedQuery = queryOptimizer.optimize(parsedQueryWords);
-        PriorityQueue<PageRankInfo> rankTerms = ranker.rankTerms(optimizedQuery.getOptimizedQuery());
-        
-        
-        return rankTerms;
+        relatedQueries = optimizedQuery.getRelatedQueries();
+        rankTerms = ranker.rankTerms(optimizedQuery.getOptimizedQuery());
     }
 
     public void setPageRankingPolicy(PageRankingPolicy pageRankingPolicy) {

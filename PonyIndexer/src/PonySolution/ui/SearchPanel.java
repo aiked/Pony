@@ -4,8 +4,10 @@
  */
 package PonySolution.ui;
 
+import PonySearcher.Search;
 import PonySearcher.models.PageRankInfo;
 import java.awt.Dimension;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -28,9 +30,11 @@ public class SearchPanel extends javax.swing.JPanel {
             + "</ul>";
     /**
      * Creates new form SearchPanel
+     * @param ponyUi
      */
     public SearchPanel(PonyUi ponyUi) {
         initComponents();
+        ListManager.AbstractToDefaultListModelConverter(sp_RelatedQueriesList);
         this.ponyUi = ponyUi;
     }
 
@@ -51,9 +55,14 @@ public class SearchPanel extends javax.swing.JPanel {
         sp_vector = new javax.swing.JRadioButton();
         sp_opaki = new javax.swing.JRadioButton();
         sp_searchPolicyLabel = new javax.swing.JLabel();
+        sp_relatedQueriesPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sp_RelatedQueriesList = new javax.swing.JList();
 
-        setMaximumSize(new java.awt.Dimension(550, 32767));
+        setMaximumSize(new java.awt.Dimension(895, 32767));
 
+        sp_searchButton.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         sp_searchButton.setText("Search");
         sp_searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,36 +101,72 @@ public class SearchPanel extends javax.swing.JPanel {
         sp_searchPolicyLabel.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         sp_searchPolicyLabel.setText("Search policy");
 
+        jLabel1.setFont(new java.awt.Font("SansSerif", 0, 16)); // NOI18N
+        jLabel1.setText("Related Queries");
+
+        sp_RelatedQueriesList.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
+        sp_RelatedQueriesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                onRelatedQueryClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(sp_RelatedQueriesList);
+
+        javax.swing.GroupLayout sp_relatedQueriesPanelLayout = new javax.swing.GroupLayout(sp_relatedQueriesPanel);
+        sp_relatedQueriesPanel.setLayout(sp_relatedQueriesPanelLayout);
+        sp_relatedQueriesPanelLayout.setHorizontalGroup(
+            sp_relatedQueriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sp_relatedQueriesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(sp_relatedQueriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        sp_relatedQueriesPanelLayout.setVerticalGroup(
+            sp_relatedQueriesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sp_relatedQueriesPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sp_searchEntriesWrapper)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sp_searchInput, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sp_searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(sp_searchPolicyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(sp_vector)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sp_opaki)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(sp_opaki))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(sp_searchInput)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sp_searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(sp_searchEntriesWrapper, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(sp_relatedQueriesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sp_searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                    .addComponent(sp_searchInput))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sp_searchInput, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sp_searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(sp_searchEntriesWrapper, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sp_searchEntriesWrapper, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sp_relatedQueriesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sp_searchPolicyLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -139,7 +184,13 @@ public class SearchPanel extends javax.swing.JPanel {
         clearResultEntries();
         String query = sp_searchInput.getText();
         if(query!=null && !query.isEmpty()){
-            PriorityQueue<PageRankInfo> pagesRankInfo = ponyUi.onSearchTerms(query);
+            Search search = ponyUi.onSearchTerms(query);
+            PriorityQueue<PageRankInfo> pagesRankInfo = search.getRankTerms();
+            List<String> relatedQueries = search.getRelatedQueries();
+            
+            if(relatedQueries!=null && !relatedQueries.isEmpty())
+                addRelatedQueries(relatedQueries);
+                
             if(pagesRankInfo!=null && !pagesRankInfo.isEmpty()){
                 while(!pagesRankInfo.isEmpty()){
                     PageRankInfo pageRankInfo = pagesRankInfo.poll();
@@ -148,7 +199,6 @@ public class SearchPanel extends javax.swing.JPanel {
                 return;
             }
         }
-
         addResultNotFoundEntry(new PageRankInfo(NOT_FOUND_HD, NOT_FOUND_BODY));
     }//GEN-LAST:event_onSearchButtonClicked
 
@@ -160,8 +210,19 @@ public class SearchPanel extends javax.swing.JPanel {
         ponyUi.changeRankingPolicy("opaki");
     }//GEN-LAST:event_onopakiPolicySelected
 
+    private void onRelatedQueryClicked(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_onRelatedQueryClicked
+        System.out.println("");
+       
+        String relatedQuery = ListManager.getValueFromList( evt.getFirstIndex(), sp_RelatedQueriesList);
+        sp_searchInput.setText(relatedQuery);
+    }//GEN-LAST:event_onRelatedQueryClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList sp_RelatedQueriesList;
     private javax.swing.JRadioButton sp_opaki;
+    private javax.swing.JPanel sp_relatedQueriesPanel;
     private javax.swing.JButton sp_searchButton;
     private javax.swing.JPanel sp_searchEntries;
     private javax.swing.JScrollPane sp_searchEntriesWrapper;
@@ -192,6 +253,13 @@ public class SearchPanel extends javax.swing.JPanel {
         sp_searchEntries.add(searchEntry);
         sp_searchEntriesWrapper.repaint();
         sp_searchEntriesWrapper.revalidate();
+    }
+    
+    public void addRelatedQueries(List<String> relqs){
+        ListManager.removeAllFromList(sp_RelatedQueriesList);
+        for(String relq:relqs){
+            ListManager.addStringToList(relq, sp_RelatedQueriesList);
+        }
     }
 
 }

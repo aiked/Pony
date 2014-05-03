@@ -2,9 +2,11 @@ package Common;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 /**
  *
@@ -31,6 +33,15 @@ public class SortedIterablePriorityQuery<T> extends PriorityQueue<T>{
             list.add(sortedIterator.next()); 
         }
         return list;
+    }
+    
+    public Set<T> getSet(){
+        Set<T> set = new HashSet();
+        SortedIterable<T> sortedIterator = sortedIterator(); 
+        while(sortedIterator.hasNext()){ 
+            set.add(sortedIterator.next()); 
+        }
+        return set;
     }
     
     public class SortedIterable<T> implements Iterator

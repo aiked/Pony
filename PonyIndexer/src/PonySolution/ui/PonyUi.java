@@ -157,7 +157,7 @@ public class PonyUi extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1);
 
-        setBounds(0, 0, 550, 706);
+        setBounds(0, 0, 939, 706);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -297,16 +297,14 @@ public class PonyUi extends javax.swing.JFrame {
 
     }
 
-    protected PriorityQueue<PageRankInfo> onSearchTerms(String query) {
+    protected Search onSearchTerms(String query) {
         PriorityQueue<PageRankInfo> pagesRankInfo = null;
         try {
-            pagesRankInfo = search.retrieveAndRank(query);
-        } catch (IOException ex) {
-            Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
+            search.submitQuery(query);
         } catch (Exception ex) {
             Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return pagesRankInfo;
+        return search;
     }
 
     void onStopWordsFolderSelected(String absolutePath) {
