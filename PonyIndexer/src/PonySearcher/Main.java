@@ -34,7 +34,7 @@ public class Main {
                 Search search = new Search( "D:\\\\github\\Pony\\PonyIndexer\\resources\\documentCollection\\collectionIndex",
                                     "D:\\\\github\\Pony\\PonyIndexer\\resources\\stopWords"
                 , new VectorSpaceRankingPolicy() );
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("playing");
+        PriorityQueue<PageRankInfo> retrieveAndRank = search.retrieveAndRank("how to force a pony to move");
         
         
         while(!retrieveAndRank.isEmpty()){

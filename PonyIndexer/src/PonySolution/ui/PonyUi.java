@@ -222,6 +222,8 @@ public class PonyUi extends javax.swing.JFrame {
                      Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
                  } catch (ClassNotFoundException ex) {
                      Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (Exception ex) {
+                     Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
                  }
                  loadingVocabularPanel.stopLoading();
              }
@@ -254,6 +256,8 @@ public class PonyUi extends javax.swing.JFrame {
                  } catch (IOException ex) {
                      Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
                  } catch (ClassNotFoundException ex) {
+                     Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (Exception ex) {
                      Logger.getLogger(PonyUi.class.getName()).log(Level.SEVERE, null, ex);
                  }
              }

@@ -1,7 +1,9 @@
 package Common;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -20,6 +22,15 @@ public class SortedIterablePriorityQuery<T> extends PriorityQueue<T>{
     
     public SortedIterablePriorityQuery(int capasity, Comparator comparator){
         super(capasity, comparator);
+    }
+    
+    public List<T> getOrderedList(){
+        ArrayList<T> list = new ArrayList();
+        SortedIterable<T> sortedIterator = sortedIterator(); 
+        while(sortedIterator.hasNext()){ 
+            list.add(sortedIterator.next()); 
+        }
+        return list;
     }
     
     public class SortedIterable<T> implements Iterator

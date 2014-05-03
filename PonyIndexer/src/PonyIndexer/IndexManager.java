@@ -1,6 +1,7 @@
 
 package PonyIndexer;
 
+import Common.StopWords;
 import PonyDB.*;
 
 import java.io.BufferedReader;
@@ -81,10 +82,10 @@ public class IndexManager {
 
                 while(tokenizer.hasMoreTokens() ) {
                     String token = tokenizer.nextToken();
-                    String term = termNormalizer.getLexicalAnalyzedTerm(token, stopWords);
+                    String[] term = termNormalizer.getLexicalAnalyzedTerm(token, stopWords);
                     if(term != null){
                         ++totalWordsInAllDocuments;
-                        indexTerm(documentWords, term, fileName, cntDocumentPointer, cntWord);
+                        indexTerm(documentWords, term[0], fileName, cntDocumentPointer, cntWord);
                     }
                     cntWord += (long) TermNormalizer.countUTF8Stringlength(token);
                 }

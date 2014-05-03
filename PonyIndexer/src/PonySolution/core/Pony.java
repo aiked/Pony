@@ -16,7 +16,7 @@ import java.util.PriorityQueue;
 public class Pony {
     
     public static Search Start(String documentPath, String stopWordsPath) 
-            throws FileNotFoundException, IOException, ClassNotFoundException{
+            throws FileNotFoundException, IOException, ClassNotFoundException, Exception{
         
         String collectionIndexPath = documentPath + System.getProperty("file.separator") + "collectionIndex";
         Search search;

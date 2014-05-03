@@ -2,7 +2,7 @@ package PonySearcher;
 
 import PonySearcher.models.ParsedQueryTerm;
 import Common.TermNormalizer;
-import PonyIndexer.StopWords;
+import Common.StopWords;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,54 +13,14 @@ import java.util.StringTokenizer;
  * @author japostol
  */
 public class ParsedQuery {
-    private TermNormalizer termNormalizer;
-    private StopWords stopWords;
+    private final TermNormalizer termNormalizer;
+    private final StopWords stopWords;
     
-    public ParsedQuery(String StopWordsFolder){
+    public ParsedQuery(StopWords stopWords){
         termNormalizer = TermNormalizer.getInstance();
-        stopWords = new StopWords();
-        if(StopWordsFolder!=null)
-            stopWords.importFromFolder(StopWordsFolder);
+        this.stopWords = stopWords;
     }
-    
-    
-//    public ArrayList<ParsedQueryWord> parse(String query) {
-//
-//        int maxFrequency = 0;
-//        HashMap<String, Integer> tmpTerms = new HashMap();
-//        StringTokenizer tokenizer = new StringTokenizer(query, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
-//        while(tokenizer.hasMoreTokens() ) {
-//            String word = tokenizer.nextToken();
-//            if(!word.matches(TermNormalizer.IS_DOCUMENT_TERMS_DELIMITER)){
-//                
-//                word = termNormalizer.termToLowerCase(word);
-//                if(termNormalizer.isTermGreek(word)){
-//                    word = termNormalizer.removePunctuation(word);
-//                }
-//                word = stopWords.getValidTerm(word);
-//                if(word!=null && !word.isEmpty()){
-//                    word = termNormalizer.stemTerm(word);
-//                    Integer frequency = tmpTerms.get(word);
-//                    if(frequency==null){
-//                        frequency = 0;
-//                    }
-//                    ++frequency;
-//                    maxFrequency = Math.max(maxFrequency, frequency);
-//                    tmpTerms.put(word, frequency);
-//                }
-//            }
-//        }
-//        ArrayList<ParsedQueryWord> parsedQueryWords = new ArrayList( tmpTerms.size() );
-//        for( Map.Entry<String, Integer> tmpTerm : tmpTerms.entrySet() ){
-//            parsedQueryWords.add( 
-//                    new ParsedQueryTerm( 
-//                        ((double)tmpTerm.getValue())/((double)maxFrequency), 
-//                        tmpTerm.getKey(), 0 ) 
-//                    );
-//        }
-//        return parsedQueryWords;
-//    }
-    
+        
     public ArrayList<ParsedQueryTerm> parse(String query) {
 
         int maxFrequency = 0;
@@ -72,9 +32,9 @@ public class ParsedQuery {
         StringTokenizer tokenizer = new StringTokenizer(query, TermNormalizer.DOCUMENT_TERMS_DELIMITER, true);
         
         while(tokenizer.hasMoreTokens() ) {
-            
-            String word = termNormalizer.getLexicalAnalyzedTerm(tokenizer.nextToken(), stopWords);
-            if(word!=null){
+            String word = tokenizer.nextToken();
+            String[] parsedWord = termNormalizer.getLexicalAnalyzedTerm(word, stopWords);
+            if(parsedWord!=null){
                 weight = 1.0;
                 // Get possible weight
                 if (tokenizer.countTokens()>2 && termNormalizer.isDoubleDot(tokenizer.nextToken())){
@@ -91,9 +51,9 @@ public class ParsedQuery {
                         if(weight == 0){ weight = 1.0; }
                 }
 
-                ParsedQueryTerm wordInfo = tmpTerms.get(word);
+                ParsedQueryTerm wordInfo = tmpTerms.get(parsedWord[0]);
                 if(wordInfo == null){
-                    tmpTerms.put(word, new ParsedQueryTerm( 1, word, weight));
+                    tmpTerms.put(parsedWord[0], new ParsedQueryTerm( 1, parsedWord[0], word, weight));
                     maxFrequency = Math.max(maxFrequency, 1);
                 }
                 else{
@@ -112,7 +72,7 @@ public class ParsedQuery {
         }
         
         for (ParsedQueryTerm pW : parsedQueryWords){
-            System.out.println(pW.getWord()+"  "+pW.getTf()+"  "+pW.getWeight());
+            System.out.println(pW.getParsedWord()+"  "+pW.getTf()+"  "+pW.getWeight());
         }
         
         return parsedQueryWords;

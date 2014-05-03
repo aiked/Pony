@@ -1,7 +1,7 @@
 package Common;
 
-import PonyIndexer.StopWords;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import mitos.stemmer.Stemmer;
@@ -87,22 +87,35 @@ public class TermNormalizer {
                     ||(c=='ί')||(c=='ό')||(c=='ύ')||(c=='ώ'));
     }
     
-    public static HashSet<String> getLanguage(String term) {
-        HashSet langs = new HashSet(2);
+    
+    /////////////////////////////////////////
+    /////// languages
+    
+    private static final HashMap<String, HashSet<String>> languageSupportedCodes= new HashMap<String, HashSet<String>>(){{
+        put("ell", new HashSet<String>(){{ add("ell"); add("grc"); }});
+        put("eng", new HashSet<String>(){{ add("eng"); }});
+    }};
+    
+    public static HashSet<String> getLanguageCodes(String lang) {
+        return languageSupportedCodes.get(lang);
+    }
+    
+    public static String getLanguage(String term) {
         // Java uses Unicode
         // Modern Greek in unicode are between 0370 - 03FF
         // Basic Latin 0021 - 007E
         char c = term.charAt(0); // Get the first character of the word
         if (c >= (char) 880 && c <= (char) 1023) {
             // If character is between 0x0370 - 0x03FF
-            langs.add("grc");
-            langs.add("ell");
+            return "ell";
         } else if (c >= (char) 33 && c <= (char) 126) {
             // If character is // between 0x0021 - 0x007E
-            langs.add("eng"); // return english language
+            return "eng"; // return english language
         } 
-        return langs;
+        return null;
     }
+    
+    //////////////////////////////////////////
     
     public static int countUTF8Stringlength(CharSequence sequence) {
         int count = 0;
@@ -122,16 +135,17 @@ public class TermNormalizer {
         return count;
     }
     
-    public String getLexicalAnalyzedTerm(String term, StopWords stopWords){
+    public String[] getLexicalAnalyzedTerm(String term, StopWords stopWords){
+        String lexTerm;
         if(isDelimiter(term))
             return null;
         else{
-            term = termToLowerCase(term);
+            lexTerm = term = termToLowerCase(term);
             if(isTermGreek(term)){
                 term = removePunctuation(term);
             }
             term = stopWords.getValidTerm(term);
-            return term!=null && !term.isEmpty() ? stemTerm(term) : null;
+            return term!=null && !term.isEmpty() ? new String[]{ stemTerm(term), lexTerm } : null;
         }
     }
         
