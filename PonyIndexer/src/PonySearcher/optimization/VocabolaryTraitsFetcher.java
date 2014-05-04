@@ -19,14 +19,6 @@ import org.lexvo.uwn.UWN;
  * @author Apostolidis
  */
 public class VocabolaryTraitsFetcher {
-
-    private static final double CATEGORY_WEIGHT_SYNONYMS    = 0.9;
-    private static final double CATEGORY_WEIGHT_HYPONYMS    = 0.7;
-    private static final double CATEGORY_WEIGHT_HYPERONYMS  = 0.5;
-    private static final double CATEGORY_WEIGHT_MERONYMS    = 0.6;
-    private static final double CATEGORY_WEIGHT_HOLONYMS    = 0.6;
-    
-    
     private static VocabolaryTraitsFetcher singleInst = null;
 
     private static final String UWN_DB = "resources" + File.separator + "uwnDatabase";
@@ -145,7 +137,7 @@ public class VocabolaryTraitsFetcher {
                     vocabolaryTraits.all,
                     languageCodes,
                     vocabularyTraitsRetrievalPolicy.getTotalsynonymsToBeFetched(),
-                    CATEGORY_WEIGHT_SYNONYMS
+                    vocabularyTraitsRetrievalPolicy.getsynonymsCategoryWeight()
             );
             extractTermsFromCategory(
                     hyponymnsCategory,
@@ -153,7 +145,7 @@ public class VocabolaryTraitsFetcher {
                     vocabolaryTraits.all,
                     languageCodes,
                     vocabularyTraitsRetrievalPolicy.getTotalhyponymsToBeFetched(),
-                    CATEGORY_WEIGHT_HYPONYMS
+                    vocabularyTraitsRetrievalPolicy.gethyponymsCategoryWeight()
             );
             extractTermsFromCategory(
                     hyperonymsCategory,
@@ -161,7 +153,7 @@ public class VocabolaryTraitsFetcher {
                     vocabolaryTraits.all,
                     languageCodes,
                     vocabularyTraitsRetrievalPolicy.getTotalhyperonymsToBeFetched(),
-                    CATEGORY_WEIGHT_HYPERONYMS
+                    vocabularyTraitsRetrievalPolicy.gethyperonymsCategoryWeight()
             );
             extractTermsFromCategory(
                     meronymsCategory,
@@ -169,7 +161,7 @@ public class VocabolaryTraitsFetcher {
                     vocabolaryTraits.all,
                     languageCodes,
                     vocabularyTraitsRetrievalPolicy.getTotalmeronymsToBeFetched(),
-                    CATEGORY_WEIGHT_MERONYMS
+                    vocabularyTraitsRetrievalPolicy.getmeronymsCategoryWeight()
             );
             extractTermsFromCategory(
                     holonymsCategory,
@@ -177,7 +169,7 @@ public class VocabolaryTraitsFetcher {
                     vocabolaryTraits.all,
                     languageCodes,
                     vocabularyTraitsRetrievalPolicy.getTotalholonyToBeFetched(),
-                    CATEGORY_WEIGHT_HOLONYMS
+                    vocabularyTraitsRetrievalPolicy.getholonyCategoryWeight()
             );
 
             if (!totalLexicalParsedQueryTerms.contains(parsedQueryTerm.getParsedWord())) {

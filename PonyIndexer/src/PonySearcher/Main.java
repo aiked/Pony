@@ -4,6 +4,7 @@ import PonySearcher.models.PageRankInfo;
 import PonySearcher.ranking.VectorSpaceRankingPolicy;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -34,7 +35,7 @@ public class Main {
                 Search search = new Search( "D:\\\\github\\Pony\\PonyIndexer\\resources\\documentCollection\\collectionIndex",
                                     "D:\\\\github\\Pony\\PonyIndexer\\resources\\stopWords"
                 , new VectorSpaceRankingPolicy() );
-        search.submitQuery("ελλάδα");
+        search.submitQuery("αγάπη");
         
         PriorityQueue<PageRankInfo> retrieveAndRank = search.getRankTerms();
         
@@ -43,6 +44,13 @@ public class Main {
             System.out.println("====================");
             System.out.println(pageRankInfo.getRank());
             System.out.println(pageRankInfo.getSnippets());
+        }
+        System.out.println("====================");
+        System.out.println("====================");
+        List<String> relatedQueries = search.getRelatedQueries();
+        for(String relatedQuery:relatedQueries){
+            System.out.println("====================");
+            System.out.println(relatedQuery);
         }
                 
     }

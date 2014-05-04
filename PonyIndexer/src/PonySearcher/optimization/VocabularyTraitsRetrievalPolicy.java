@@ -22,4 +22,10 @@ public interface VocabularyTraitsRetrievalPolicy {
     public int getTotalhyponymsForOptimizedQuery();
     public int getTotalhyperonymsForOptimizedQuery();
     public int getTotalholonyForOptimizedQuery();
+    
+    public double getsynonymsCategoryWeight();
+    public double getmeronymsCategoryWeight();
+    public double gethyponymsCategoryWeight();
+    public double gethyperonymsCategoryWeight();
+    public double getholonyCategoryWeight();
 }

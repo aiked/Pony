@@ -12,7 +12,7 @@ package PonySearcher.optimization;
  */
 public class NormalVocabularyTraitsRetrieval implements VocabularyTraitsRetrievalPolicy{
     private static final int totalToBeFetched = 10;
-    private static final int optimizedQueryLength = 10;
+    private static final int optimizedQueryLength = 2;
     
 
     @Override
@@ -64,5 +64,29 @@ public class NormalVocabularyTraitsRetrieval implements VocabularyTraitsRetrieva
     public int getTotalholonyForOptimizedQuery() {
         return optimizedQueryLength;
     }
-    
+
+    @Override
+    public double getsynonymsCategoryWeight() {
+        return 0.1;
+    }
+
+    @Override
+    public double getmeronymsCategoryWeight() {
+        return 0.08;
+    }
+
+    @Override
+    public double gethyponymsCategoryWeight() {
+        return 0.05;
+    }
+
+    @Override
+    public double gethyperonymsCategoryWeight() {
+        return 0.02;
+    }
+
+    @Override
+    public double getholonyCategoryWeight() {
+        return 0.02;
+    }
 }

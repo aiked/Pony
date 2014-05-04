@@ -16,14 +16,18 @@ import java.util.Set;
  * @author Apostolidis
  */
 public class QueryOptimizer {
+    private static final int RELATED_QUERIES_SIZE = 10;
+    
     private static QueryOptimizer singleInst = null;
     
     private final VocabolaryTraitsFetcher vocabolaryTraitsFetcher;
+    private final VocabularyTraitsRetrievalPolicy vocabularyTraitsRetrievalPolicy;
     
     private QueryOptimizer( 
             StopWords _stopWords, 
             VocabularyTraitsRetrievalPolicy _vocabularyTraitsRetrievalPolicy
     ) throws Exception{
+        vocabularyTraitsRetrievalPolicy = _vocabularyTraitsRetrievalPolicy;
         VocabolaryTraitsFetcher.singletonCreate(_stopWords, _vocabularyTraitsRetrievalPolicy);
         vocabolaryTraitsFetcher = VocabolaryTraitsFetcher.getSingleInst();
     }
@@ -40,20 +44,24 @@ public class QueryOptimizer {
         return singleInst;
     }
     
-    public Query optimize(List<ParsedQueryTerm> ParsedQueryTerms) throws IOException{
-        ArrayList<Set<ParsedQueryTerm>> queryTraits = new ArrayList(ParsedQueryTerms.size());
-        ArrayList<ParsedQueryTerm> optimizedQuery = new ArrayList();
+    public Query optimize(List<ParsedQueryTerm> parsedQueryTerms) throws IOException{
+        List<Set<ParsedQueryTerm>> queryTraits = new ArrayList(parsedQueryTerms.size());
+        List <ParsedQueryTerm> optimizedQuery = new ArrayList();
         
-        generateOptimizedQuery(ParsedQueryTerms, optimizedQuery, queryTraits);
+        generateOptimizedQuery(parsedQueryTerms, optimizedQuery, queryTraits);
+
+        List<String> createRelatedQueriesArray = createRelatedQueriesArray();
+        generateRelatedQueries(queryTraits, createRelatedQueriesArray);
         
-        ArrayList<String> relatedQueries = new ArrayList(10);
-        for(int i=10-1; i!=-1; --i){
+        return new Query(optimizedQuery, createRelatedQueriesArray);
+    }
+    
+    public List<String> createRelatedQueriesArray(){
+        ArrayList<String> relatedQueries = new ArrayList(RELATED_QUERIES_SIZE);
+        for(int i=RELATED_QUERIES_SIZE-1; i!=-1; --i){
             relatedQueries.add("");
         }
-
-        generateRelatedQueries(queryTraits, relatedQueries);
-        
-        return new Query(optimizedQuery, relatedQueries);
+        return relatedQueries;
     }
     
     private void generateOptimizedQuery(
@@ -68,42 +76,71 @@ public class QueryOptimizer {
             SortedIterablePriorityQuery<ParsedQueryTerm> allTraits = vocabolaryTraits.getAll();
             if(!allTraits.isEmpty()){
                 queryTraits.add(allTraits.getSet());
-                optimizedQuery.addAll(allTraits);
+            
+                extractOptimizeQuery(
+                        vocabolaryTraits.getSynonyms(), 
+                        vocabularyTraitsRetrievalPolicy.getTotalsynonymsForOptimizedQuery(), 
+                        optimizedQuery
+                );
+                extractOptimizeQuery(
+                        vocabolaryTraits.getHolonyms(), 
+                        vocabularyTraitsRetrievalPolicy.getTotalholonyForOptimizedQuery(), 
+                        optimizedQuery
+                );
+                extractOptimizeQuery(
+                        vocabolaryTraits.getHyperonyms(), 
+                        vocabularyTraitsRetrievalPolicy.getTotalhyperonymsForOptimizedQuery(), 
+                        optimizedQuery
+                );
+                extractOptimizeQuery(
+                        vocabolaryTraits.getHyponymns(), 
+                        vocabularyTraitsRetrievalPolicy.getTotalhyponymsForOptimizedQuery(), 
+                        optimizedQuery
+                );
+                extractOptimizeQuery(
+                        vocabolaryTraits.getMeronyms(), 
+                        vocabularyTraitsRetrievalPolicy.getTotalmeronymsForOptimizedQuery(), 
+                        optimizedQuery
+                );
+            }
+            if(!optimizedQuery.contains(parsedQueryTerm)){
+                optimizedQuery.add(parsedQueryTerm);
             }
         }
     }
-
+    
+    private void extractOptimizeQuery(
+            SortedIterablePriorityQuery<ParsedQueryTerm> synonyms, 
+            int totalsynonymsForOptimizedQuery, 
+            List<ParsedQueryTerm> optimizedQuery
+    ) {
+        while(totalsynonymsForOptimizedQuery-->=0 && !synonyms.isEmpty()){
+            optimizedQuery.add(synonyms.poll());
+        }
+    }
+    
     private void generateRelatedQueries(
-            ArrayList<Set<ParsedQueryTerm>> queryTraits, 
-            ArrayList<String> relatedQueries
+            List<Set<ParsedQueryTerm>> queryTraits, 
+            List<String> relatedQueries
     ){
-        int maxPowerSetIndex = 0;
-        int powerSetSize = 0;
         ArrayList<Set<Set<ParsedQueryTerm>>> powerSetList = new ArrayList(queryTraits.size());
-        for(int i=queryTraits.size()-1; i!=-1; --i){
+        for(Set<ParsedQueryTerm> queryTrait : queryTraits){
             Set<Set<ParsedQueryTerm>> tmpSet = new HashSet();
-            Set<Set<ParsedQueryTerm>> powerTraitSet = powerSet(queryTraits.get(i));
+            Set<Set<ParsedQueryTerm>> powerTraitSet = powerSet(queryTrait);
             for(Set<ParsedQueryTerm> powerTraits:powerTraitSet){
-                if(powerTraits.size()==queryTraits.get(i).size()-1){
+                if(powerTraits.size()==queryTrait.size()-1){
                     tmpSet.add(powerTraits);
                 }
             }
-            powerTraitSet = tmpSet;
-            if(powerTraitSet.size()>powerSetSize){
-                powerSetSize = powerTraitSet.size();
-                maxPowerSetIndex = i;
-            }
-            powerSetList.add(powerTraitSet);
+            powerSetList.add(tmpSet);
         }
-         
-        for(int i=0; i<powerSetList.size(); ++i){
-            Set<Set<ParsedQueryTerm>> maxPowerSet = powerSetList.get(i);
+        for(Set<Set<ParsedQueryTerm>> maxPowerSet:powerSetList){
             getTermsFromPowerSet(relatedQueries, maxPowerSet);
         }
     }
     
     private void getTermsFromPowerSet(
-            ArrayList<String> relatedQueries,
+            List<String> relatedQueries,
             Set<Set<ParsedQueryTerm>> maxPowerSet
     ){ 
         Iterator<Set<ParsedQueryTerm>> powerSet = maxPowerSet.iterator();
@@ -112,16 +149,17 @@ public class QueryOptimizer {
             Iterator<ParsedQueryTerm> termTrait = powerSet.next().iterator();
             while(termTrait.hasNext() && index<relatedQueries.size()){
                 String query = relatedQueries.get(index);
-                relatedQueries.set(index++, query + " " + termTrait.next().getWord());
+                relatedQueries.set(index, query + " " + termTrait.next().getWord());
+                ++index;
             }
         }
     }
     
     public class Query{
-        private ArrayList<ParsedQueryTerm> optimizedQuery;
-        private ArrayList<String> relatedQueries;
+        private List<ParsedQueryTerm> optimizedQuery;
+        private List<String> relatedQueries;
 
-        public Query(ArrayList<ParsedQueryTerm> optimizedQuery, ArrayList<String> relatedQueries) {
+        public Query(List<ParsedQueryTerm> optimizedQuery, List<String> relatedQueries) {
             this.optimizedQuery = optimizedQuery;
             this.relatedQueries = relatedQueries;
         }

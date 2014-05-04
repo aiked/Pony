@@ -26,19 +26,12 @@ public class VectorSpaceRankingPolicy implements PageRankingPolicy{
 
     @Override
     public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryTerm parsedQueryWord) {
-        pageRankInfo.addRank(termRank*docRank);//*parsedQueryWord.getWeight());
-        pageRankInfo.addDenominatorWordRank(docRank*docRank);
-        pageRankInfo.addDenominatorQueryRank(termRank*termRank);
+        pageRankInfo.addRank((termRank*docRank)*parsedQueryWord.getWeight());//*parsedQueryWord.getWeight());
     }
 
     @Override
     public void calculateRank(PageRankInfo pageRankInfo) {
-        pageRankInfo.setRank( 
-                Math.sqrt( 
-                    pageRankInfo.getDenominatorQueryRank()
-                    *pageRankInfo.getDenominatorWordRank() 
-                )
-            );
+
     }
     
 }

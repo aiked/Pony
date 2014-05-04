@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JComponent.TOOL_TIP_TEXT_KEY;
@@ -57,6 +58,7 @@ public class SearchEntry extends javax.swing.JPanel {
         }
 
         StringBuilder snippets = new StringBuilder("<html>");
+        Collections.shuffle(pageRankInfo.getSnippets());
         for( String snippet : pageRankInfo.getSnippets() ){
             snippets.append(snippet);
             if(snippets.length()>SNIPPET_MAX_LENGTH){

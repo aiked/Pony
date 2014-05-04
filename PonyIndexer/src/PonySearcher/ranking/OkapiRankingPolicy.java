@@ -30,7 +30,7 @@ public class OkapiRankingPolicy  implements PageRankingPolicy{
 
     @Override
     public void addRank(PageRankInfo pageRankInfo, double termRank, double docRank, ParsedQueryTerm parsedQueryWord) {
-        pageRankInfo.addRank(termRank*docRank);
+        pageRankInfo.addRank((termRank*docRank)*parsedQueryWord.getWeight());
     }
 
     @Override
