@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class SnippetGenerator {
     public static final String SNIPPET_SEPERATOR = " <i>|</i> ";
+    public static final int SNIPPET_MAX_SIZE = 4;
     
     private static final byte S_OFFSET_START = 30;
     private static final byte S_OFFSET_END = 30;
@@ -23,7 +24,8 @@ public class SnippetGenerator {
 
         ArrayList<String> snippets = new ArrayList();
         if(positions!=null && !positions.isEmpty() ){
-            for(int i=positions.size()-1; i!=0; --i){
+            int maxSize = positions.size()-SNIPPET_MAX_SIZE;
+            for(int i=positions.size()-1; i!=0 && i>maxSize; --i){
                 snippets.add( generateSingle(file, term, positions.get(i)) + SNIPPET_SEPERATOR );
             }
             snippets.add( generateSingle(file, term, positions.get(0)) );
