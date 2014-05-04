@@ -36,6 +36,7 @@ public class SearchPanel extends javax.swing.JPanel {
         initComponents();
         ListManager.AbstractToDefaultListModelConverter(sp_RelatedQueriesList);
         this.ponyUi = ponyUi;
+        sp_relatedQueriesPanel.setVisible(false);
     }
 
     /**
@@ -257,8 +258,13 @@ public class SearchPanel extends javax.swing.JPanel {
     
     public void addRelatedQueries(List<String> relqs){
         ListManager.removeAllFromList(sp_RelatedQueriesList);
-        for(String relq:relqs){
-            ListManager.addStringToList(relq, sp_RelatedQueriesList);
+        if(relqs.isEmpty())
+            sp_relatedQueriesPanel.setVisible(false);
+        else{
+            sp_relatedQueriesPanel.setVisible(true);
+            for(String relq:relqs){
+                ListManager.addStringToList(relq, sp_RelatedQueriesList);
+            }
         }
     }
 

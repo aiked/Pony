@@ -11,31 +11,58 @@ package PonySearcher.optimization;
  * @author Apostolidis
  */
 public class NormalVocabularyTraitsRetrieval implements VocabularyTraitsRetrievalPolicy{
-    private static final int sameVal = 10;
+    private static final int totalToBeFetched = 10;
+    private static final int optimizedQueryLength = 10;
+    
 
     @Override
     public int getTotalsynonymsToBeFetched() {
-        return sameVal;
+        return totalToBeFetched;
     }
 
     @Override
     public int getTotalmeronymsToBeFetched() {
-        return sameVal;
+        return totalToBeFetched;
     }
 
     @Override
     public int getTotalhyponymsToBeFetched() {
-        return sameVal;
+        return totalToBeFetched;
     }
 
     @Override
     public int getTotalhyperonymsToBeFetched() {
-        return sameVal;
+        return totalToBeFetched;
     }
 
     @Override
     public int getTotalholonyToBeFetched() {
-        return sameVal;
+        return totalToBeFetched;
+    }
+
+    @Override
+    public int getTotalsynonymsForOptimizedQuery() {
+        return optimizedQueryLength;
+    }
+
+    @Override
+    public int getTotalmeronymsForOptimizedQuery() {
+        return optimizedQueryLength;
+    }
+
+    @Override
+    public int getTotalhyponymsForOptimizedQuery() {
+        return optimizedQueryLength;
+    }
+
+    @Override
+    public int getTotalhyperonymsForOptimizedQuery() {
+        return optimizedQueryLength;
+    }
+
+    @Override
+    public int getTotalholonyForOptimizedQuery() {
+        return optimizedQueryLength;
     }
     
 }

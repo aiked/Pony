@@ -16,4 +16,10 @@ public interface VocabularyTraitsRetrievalPolicy {
     public int getTotalhyponymsToBeFetched();
     public int getTotalhyperonymsToBeFetched();
     public int getTotalholonyToBeFetched();
+    
+    public int getTotalsynonymsForOptimizedQuery();
+    public int getTotalmeronymsForOptimizedQuery();
+    public int getTotalhyponymsForOptimizedQuery();
+    public int getTotalhyperonymsForOptimizedQuery();
+    public int getTotalholonyForOptimizedQuery();
 }
