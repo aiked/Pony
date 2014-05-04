@@ -1,9 +1,6 @@
 package PonySearcher.models;
 
-/**
- *
- * @author Apostolidis
- */
+
 public class ParsedQueryTerm {
     private double tf;
     private String parsedWord;

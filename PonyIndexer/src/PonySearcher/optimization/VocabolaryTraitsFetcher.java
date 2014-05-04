@@ -1,5 +1,3 @@
-
-
 package PonySearcher.optimization;
 
 import Common.SortedIterablePriorityQuery;
@@ -21,73 +19,86 @@ import org.lexvo.uwn.UWN;
  * @author Apostolidis
  */
 public class VocabolaryTraitsFetcher {
+
+    private static final double CATEGORY_WEIGHT_SYNONYMS    = 0.9;
+    private static final double CATEGORY_WEIGHT_HYPONYMS    = 0.7;
+    private static final double CATEGORY_WEIGHT_HYPERONYMS  = 0.5;
+    private static final double CATEGORY_WEIGHT_MERONYMS    = 0.6;
+    private static final double CATEGORY_WEIGHT_HOLONYMS    = 0.6;
+    
+    
     private static VocabolaryTraitsFetcher singleInst = null;
-    
+
     private static final String UWN_DB = "resources" + File.separator + "uwnDatabase";
-    
+
     private static final String PREDICATE_TYPE_SEPERATOR = "rel:";
     private static final int PREDICATE_TYPE_SEPERATOR_LENGTH = PREDICATE_TYPE_SEPERATOR.length();
-    
+
     private UWN uwn = null;
     private StopWords stopWords = null;
     private TermNormalizer termNormalizer = null;
     private VocabularyTraitsRetrievalPolicy vocabularyTraitsRetrievalPolicy;
-    
+
     private HashMap<String, SortedIterablePriorityQuery<Statement>> vocabolaryTraitsCollectionMap;
-    
+
     private SortedIterablePriorityQuery<Statement> synonymsCategory = null;
     private SortedIterablePriorityQuery<Statement> meronymsCategory = null;
     private SortedIterablePriorityQuery<Statement> hyponymnsCategory = null;
     private SortedIterablePriorityQuery<Statement> hyperonymsCategory = null;
     private SortedIterablePriorityQuery<Statement> holonymsCategory = null;
-    
+
     private HashSet<String> totalParsedQueryTerms = null;
     private HashSet<String> totalLexicalParsedQueryTerms = null;
-    
+
     private VocabolaryTraitsFetcher(
-            StopWords _stopWords, 
+            StopWords _stopWords,
             VocabularyTraitsRetrievalPolicy _vocabularyTraitsRetrievalPolicy
-    )throws Exception{
+    ) throws Exception {
         vocabularyTraitsRetrievalPolicy = _vocabularyTraitsRetrievalPolicy;
         stopWords = _stopWords;
         termNormalizer = TermNormalizer.getInstance();
-        File dbFilePath = new File( UWN_DB );
-        uwn = new UWN( dbFilePath );
+        File dbFilePath = new File(UWN_DB);
+        uwn = new UWN(dbFilePath);
         vocabolaryTraitsCollectionMap = new HashMap();
-        
+
         Comparator<Statement> comparator = new Comparator<Statement>() {
             @Override
             public int compare(Statement a, Statement b) {
-                if      (a.getWeight()==b.getWeight())  return 0;
-                else if (a.getWeight()>b.getWeight())   return 1;
-                else                                    return -1;
+                if (a.getWeight() == b.getWeight()) {
+                    return 0;
+                } else if (a.getWeight() > b.getWeight()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
         };
         totalParsedQueryTerms = new HashSet();
         totalLexicalParsedQueryTerms = new HashSet();
-        
+
         synonymsCategory = new SortedIterablePriorityQuery(10, comparator);
         meronymsCategory = new SortedIterablePriorityQuery(10, comparator);
         hyponymnsCategory = new SortedIterablePriorityQuery(10, comparator);
         hyperonymsCategory = new SortedIterablePriorityQuery(10, comparator);
         holonymsCategory = new SortedIterablePriorityQuery(10, comparator);
     }
-    
-    public static void singletonCreate(            
-            StopWords _stopWords, 
+
+    public static void singletonCreate(
+            StopWords _stopWords,
             VocabularyTraitsRetrievalPolicy _vocabularyTraitsRetrievalPolicy
-    ) throws Exception{
-        if(singleInst==null)
+    ) throws Exception {
+        if (singleInst == null) {
             singleInst = new VocabolaryTraitsFetcher(_stopWords, _vocabularyTraitsRetrievalPolicy);
+        }
     }
-    
-    public static VocabolaryTraitsFetcher getSingleInst(){
+
+    public static VocabolaryTraitsFetcher getSingleInst() {
         return singleInst;
     }
-    
+
     public VocabolaryTraits getNewVocabolaryTraits(
             ParsedQueryTerm parsedQueryTerm
-    ) throws IOException{
+    ) throws IOException {
 
         totalParsedQueryTerms.clear();
         totalLexicalParsedQueryTerms.clear();
@@ -96,7 +107,7 @@ public class VocabolaryTraitsFetcher {
         hyponymnsCategory.clear();
         hyperonymsCategory.clear();
         holonymsCategory.clear();
-        
+
         vocabolaryTraitsCollectionMap.put("means", synonymsCategory);
         vocabolaryTraitsCollectionMap.put("closely_related", synonymsCategory);
         vocabolaryTraitsCollectionMap.put("similar", synonymsCategory);
@@ -104,24 +115,24 @@ public class VocabolaryTraitsFetcher {
         vocabolaryTraitsCollectionMap.put("has_subclass", hyperonymsCategory);
         vocabolaryTraitsCollectionMap.put("part_of", meronymsCategory);
         vocabolaryTraitsCollectionMap.put("has_part", holonymsCategory);
-        
+
         String term = parsedQueryTerm.getWord();
         String termLang = TermNormalizer.getLanguage(term);
         HashSet<String> languageCodes = TermNormalizer.getLanguageCodes(termLang);
-        if(termLang.isEmpty()){
+        if (termLang.isEmpty()) {
             return null;
-        }else{
+        } else {
             Entity entity = Entity.createTerm(term, termLang);
             Iterator<Statement> it = uwn.get(entity);
             while (it.hasNext()) {
-                Statement stmt = it.next();   
+                Statement stmt = it.next();
 
                 String predicateType = stmt.getPredicate().getId();
-                assert(predicateType.startsWith(PREDICATE_TYPE_SEPERATOR));
+                assert (predicateType.startsWith(PREDICATE_TYPE_SEPERATOR));
                 String type = predicateType.substring(PREDICATE_TYPE_SEPERATOR_LENGTH);
-                SortedIterablePriorityQuery<Statement> vocabularyTraitCollection 
+                SortedIterablePriorityQuery<Statement> vocabularyTraitCollection
                         = vocabolaryTraitsCollectionMap.get(type);
-                if(vocabularyTraitCollection!=null){
+                if (vocabularyTraitCollection != null) {
                     vocabularyTraitCollection.add(stmt);
                 }
             }
@@ -129,93 +140,101 @@ public class VocabolaryTraitsFetcher {
             VocabolaryTraits vocabolaryTraits = new VocabolaryTraits();
 
             extractTermsFromCategory(
-                    synonymsCategory, 
-                    vocabolaryTraits.synonyms, 
+                    synonymsCategory,
+                    vocabolaryTraits.synonyms,
                     vocabolaryTraits.all,
-                    languageCodes, 
-                    vocabularyTraitsRetrievalPolicy.getTotalsynonymsToBeFetched()
+                    languageCodes,
+                    vocabularyTraitsRetrievalPolicy.getTotalsynonymsToBeFetched(),
+                    CATEGORY_WEIGHT_SYNONYMS
             );
             extractTermsFromCategory(
-                    hyponymnsCategory, 
-                    vocabolaryTraits.hyponymns, 
+                    hyponymnsCategory,
+                    vocabolaryTraits.hyponymns,
                     vocabolaryTraits.all,
-                    languageCodes, 
-                    vocabularyTraitsRetrievalPolicy.getTotalhyponymsToBeFetched()
+                    languageCodes,
+                    vocabularyTraitsRetrievalPolicy.getTotalhyponymsToBeFetched(),
+                    CATEGORY_WEIGHT_HYPONYMS
             );
             extractTermsFromCategory(
-                    hyperonymsCategory, 
-                    vocabolaryTraits.hyperonyms, 
+                    hyperonymsCategory,
+                    vocabolaryTraits.hyperonyms,
                     vocabolaryTraits.all,
-                    languageCodes, 
-                    vocabularyTraitsRetrievalPolicy.getTotalhyperonymsToBeFetched()
+                    languageCodes,
+                    vocabularyTraitsRetrievalPolicy.getTotalhyperonymsToBeFetched(),
+                    CATEGORY_WEIGHT_HYPERONYMS
             );
             extractTermsFromCategory(
-                    meronymsCategory, 
-                    vocabolaryTraits.meronyms, 
+                    meronymsCategory,
+                    vocabolaryTraits.meronyms,
                     vocabolaryTraits.all,
-                    languageCodes, 
-                    vocabularyTraitsRetrievalPolicy.getTotalmeronymsToBeFetched()
+                    languageCodes,
+                    vocabularyTraitsRetrievalPolicy.getTotalmeronymsToBeFetched(),
+                    CATEGORY_WEIGHT_MERONYMS
             );
             extractTermsFromCategory(
-                    holonymsCategory, 
-                    vocabolaryTraits.holonyms, 
+                    holonymsCategory,
+                    vocabolaryTraits.holonyms,
                     vocabolaryTraits.all,
-                    languageCodes, 
-                    vocabularyTraitsRetrievalPolicy.getTotalholonyToBeFetched()
+                    languageCodes,
+                    vocabularyTraitsRetrievalPolicy.getTotalholonyToBeFetched(),
+                    CATEGORY_WEIGHT_HOLONYMS
             );
 
-            if(!totalLexicalParsedQueryTerms.contains(parsedQueryTerm.getParsedWord()))
+            if (!totalLexicalParsedQueryTerms.contains(parsedQueryTerm.getParsedWord())) {
                 vocabolaryTraits.all.add(parsedQueryTerm);
-            
+            }
+
             return vocabolaryTraits;
         }
 
     }
-    
+
     private void extractTermsFromCategory(
-            SortedIterablePriorityQuery<Statement> category, 
+            SortedIterablePriorityQuery<Statement> category,
             SortedIterablePriorityQuery<ParsedQueryTerm> terms,
             SortedIterablePriorityQuery<ParsedQueryTerm> all,
             final HashSet<String> supportedLangs,
-            final int fetchedMaxSize
-    ) throws IOException{
-        if(fetchedMaxSize!=0){
+            final int fetchedMaxSize,
+            final double categoryWeight
+    ) throws IOException {
+        if (fetchedMaxSize != 0) {
             int fechedSize = 0;
-            while( !category.isEmpty() ){ 
+            while (!category.isEmpty()) {
                 Statement stmt = (Statement) category.poll();
                 Iterator<Statement> catTerms = uwn.getTermEntities(stmt.getObject());
-                while(catTerms.hasNext()){
+                while (catTerms.hasNext()) {
                     Statement catTerm = catTerms.next();
                     String term = catTerm.getObject().getTermStr();
-                    if( supportedLangs.contains(catTerm.getObject().getTermLanguage()) 
-                        && !totalParsedQueryTerms.contains(term)){
+                    if (supportedLangs.contains(catTerm.getObject().getTermLanguage())
+                            && !totalParsedQueryTerms.contains(term)) {
                         totalParsedQueryTerms.add(term);
                         String[] lexTerm = termNormalizer.getLexicalAnalyzedTerm(term, stopWords);
-                        if(lexTerm!=null && !totalLexicalParsedQueryTerms.contains(lexTerm[0])){
+                        if (lexTerm != null && !totalLexicalParsedQueryTerms.contains(lexTerm[0])) {
                             totalLexicalParsedQueryTerms.add(lexTerm[0]);
-                            ParsedQueryTerm parsedQueryTerm = new ParsedQueryTerm(0, lexTerm[0], term, catTerm.getWeight());
+                            ParsedQueryTerm parsedQueryTerm = new ParsedQueryTerm(0, lexTerm[0], term, catTerm.getWeight()*categoryWeight);
                             all.add(parsedQueryTerm);
                             terms.add(parsedQueryTerm);
-                            if(++fechedSize==fetchedMaxSize)
+                            if (++fechedSize == fetchedMaxSize) {
                                 return;
+                            }
                         }
 
-                    }  
+                    }
                 }
-            } 
+            }
         }
     }
 
-    public class VocabolaryTraits{
-        
+    public class VocabolaryTraits {
+
         protected final SortedIterablePriorityQuery<ParsedQueryTerm> synonyms;
         private final SortedIterablePriorityQuery<ParsedQueryTerm> meronyms;
         private final SortedIterablePriorityQuery<ParsedQueryTerm> hyponymns;
         private final SortedIterablePriorityQuery<ParsedQueryTerm> hyperonyms;
         private final SortedIterablePriorityQuery<ParsedQueryTerm> holonyms;
         private final SortedIterablePriorityQuery<ParsedQueryTerm> all;
-        
-        public VocabolaryTraits(){
+
+        public VocabolaryTraits() {
             this.synonyms = new SortedIterablePriorityQuery(10, new ParsedQueryTermComparator());
             this.meronyms = new SortedIterablePriorityQuery(10, new ParsedQueryTermComparator());
             this.hyponymns = new SortedIterablePriorityQuery(10, new ParsedQueryTermComparator());
@@ -224,12 +243,17 @@ public class VocabolaryTraitsFetcher {
             this.all = new SortedIterablePriorityQuery(10, new ParsedQueryTermComparator());
         }
 
-        private class ParsedQueryTermComparator implements Comparator<ParsedQueryTerm>{
+        private class ParsedQueryTermComparator implements Comparator<ParsedQueryTerm> {
+
             @Override
             public int compare(ParsedQueryTerm a, ParsedQueryTerm b) {
-                if      (a.getWeight()==b.getWeight())  return 0;
-                else if (a.getWeight()>b.getWeight())   return 1;
-                else                                    return -1;
+                if (a.getWeight() == b.getWeight()) {
+                    return 0;
+                } else if (a.getWeight() > b.getWeight()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
 
         }
@@ -253,23 +277,22 @@ public class VocabolaryTraitsFetcher {
         public SortedIterablePriorityQuery<ParsedQueryTerm> getHolonyms() {
             return holonyms;
         }
-        
+
         public SortedIterablePriorityQuery<ParsedQueryTerm> getAll() {
             return all;
         }
     }
 
-
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         VocabolaryTraitsFetcher.singletonCreate(new StopWords(), new NormalVocabularyTraitsRetrieval());
         VocabolaryTraitsFetcher singleInst1 = VocabolaryTraitsFetcher.getSingleInst();
-        VocabolaryTraits newVocabolaryTraits = singleInst1.getNewVocabolaryTraits( 
-                new ParsedQueryTerm(0, "αγάπη", "αγάπη", 0)
+        VocabolaryTraits newVocabolaryTraits = singleInst1.getNewVocabolaryTraits(
+                new ParsedQueryTerm(0, "αγάπη", "αγάπη", 1.0)
         );
-       
-        for(ParsedQueryTerm vocabolaryTrait:newVocabolaryTraits.all){
-            System.out.println(vocabolaryTrait.getWord());
+
+        for (ParsedQueryTerm vocabolaryTrait : newVocabolaryTraits.all) {
+            System.out.println(vocabolaryTrait.getWord()+ "  "+ vocabolaryTrait.getWeight());
         }
-        
+
     }
 }
