@@ -10,7 +10,8 @@ import java.util.logging.Logger;
  * @author Apostolidis
  */
 public class CrawlerCore implements FetchingThreadNotifier {
-
+    private static final int WAIT_FETCHERS_TIME = 50;
+    
     private final ArrayList<CrawlerListener> crawlerListeners;
     private final FetchingThreadManager fetchingThreadManager;
     private final CrawlerData crawlerData;
@@ -59,7 +60,7 @@ public class CrawlerCore implements FetchingThreadNotifier {
         while(fetchingThreadManager.hasRunningThreads() || crawlerData.hasPendingUrls()){
             if( !fetchingThreadManager.hasIdleThreads() || !crawlerData.hasPendingUrls() ){
                 fetchingThreadManager.garbageCollect();
-                Thread.yield();
+                Thread.sleep(WAIT_FETCHERS_TIME);
             }else{           
                 String urlToBeFetched = crawlerData.getNextPendingUrl();
                 notifyStartFetching(urlToBeFetched);
