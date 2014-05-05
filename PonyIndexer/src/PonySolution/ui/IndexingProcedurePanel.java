@@ -70,10 +70,10 @@ public class IndexingProcedurePanel extends javax.swing.JPanel {
         // TODO: other label for msg
         id_processStatusLabel.setText( id_processStatusLabel.getText() + "  " +  msg);
     }
-    private static boolean dotBarLoader = false;
+
     void setProcessBar(int percent) {
         id_progressBar.setValue(percent);
-        id_progressBar.setString(percent+((dotBarLoader=!dotBarLoader)?".":"")+"%");
+        id_progressBar.setString(percent+"%");
     }
 
     void setProcessStatusLabel(String state) {
