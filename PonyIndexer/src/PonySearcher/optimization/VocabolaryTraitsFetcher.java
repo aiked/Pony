@@ -275,16 +275,11 @@ public class VocabolaryTraitsFetcher {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        VocabolaryTraitsFetcher.singletonCreate(new StopWords(), new NormalVocabularyTraitsRetrieval());
-        VocabolaryTraitsFetcher singleInst1 = VocabolaryTraitsFetcher.getSingleInst();
-        VocabolaryTraits newVocabolaryTraits = singleInst1.getNewVocabolaryTraits(
-                new ParsedQueryTerm(0, "αγάπη", "αγάπη", 1.0)
-        );
-
-        for (ParsedQueryTerm vocabolaryTrait : newVocabolaryTraits.all) {
-            System.out.println(vocabolaryTrait.getWord()+ "  "+ vocabolaryTrait.getWeight());
-        }
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        VocabolaryTraitsFetcher.singletonCreate(new StopWords(), new NormalVocabularyTraitsRetrieval());
+//        VocabolaryTraitsFetcher singleInst1 = VocabolaryTraitsFetcher.getSingleInst();
+//        VocabolaryTraits newVocabolaryTraits = singleInst1.getNewVocabolaryTraits(
+//                new ParsedQueryTerm(0, "αγάπη", "αγάπη", 1.0)
+//        );
+//    }
 }
