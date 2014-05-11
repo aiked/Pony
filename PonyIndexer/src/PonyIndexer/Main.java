@@ -18,13 +18,17 @@ public class Main {
             System.exit(1);
         }
         System.out.println("PonyIndexer");
+        long startTime = System.currentTimeMillis();
         IndexManager index = IndexManager.getInstance();
         index.indexer( args[0], args[1], args[2], null );
-        System.out.println("All files were intexed.");
+        long finishTime = System.currentTimeMillis();
+        System.out.println("All files were intexed in " + (finishTime-startTime) + " miliseconds");
     }
      
+             
 //        IndexManager index = IndexManager.getInstance();
 //        index.indexer( 
+//    D:\\github\\Pony\\PonyIndexer\\resources\\unitTest\\bundles\\bundle1 D:\\github\\Pony\\PonyIndexer\\resources\\stopWords D:\\github\\Pony\\PonyIndexer\\resources\\unitTest\\bundles\\bundles
 //                "D:\\github\\Pony\\PonyIndexer\\resources\\documentCollection",
 //                "D:\\github\\Pony\\PonyIndexer\\resources\\stopWords",
 //                "D:\\github\\Pony\\PonyIndexer\\resources", null );

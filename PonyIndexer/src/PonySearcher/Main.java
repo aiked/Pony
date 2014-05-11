@@ -43,19 +43,20 @@ public class Main {
 //        
 //        PriorityQueue<PageRankInfo> retrieveAndRank = search.getRankTerms();
         
-        while(!retrieveAndRank.isEmpty()){
-            PageRankInfo pageRankInfo = retrieveAndRank.poll();
-            System.out.println("====================");
-            System.out.println(pageRankInfo.getRank());
-            System.out.println(pageRankInfo.getSnippets());
-        }
-        System.out.println("====================");
-        System.out.println("====================");
-        List<String> relatedQueries = search.getRelatedQueries();
-        for(String relatedQuery:relatedQueries){
-            System.out.println("====================");
-            System.out.println(relatedQuery);
-        }
-                
+//        while(!retrieveAndRank.isEmpty()){
+//            PageRankInfo pageRankInfo = retrieveAndRank.poll();
+//            System.out.println("====================");
+//            System.out.println(pageRankInfo.getRank());
+//            System.out.println(pageRankInfo.getSnippets());
+//        }
+//        System.out.println("====================");
+//        System.out.println("====================");
+//        List<String> relatedQueries = search.getRelatedQueries();
+//        for(String relatedQuery:relatedQueries){
+//            System.out.println("====================");
+//            System.out.println(relatedQuery);
+//        }             
     }
+    
+    
 }

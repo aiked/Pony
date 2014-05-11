@@ -87,5 +87,7 @@ public class Search {
         ranker.setPageRankingPolicy(pageRankingPolicy);
     }
     
-    
+    public VocabularyInfoHolder getVocabularyInfoHolder(){
+        return this.vocabularyInfoHolder;
+    }
 }
