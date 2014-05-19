@@ -22,8 +22,8 @@ public class Main {
 //            System.exit(1);
 //        }
 //        
-                Search search = new Search( "C:\\github\\Pony\\PonyIndexer\\resources\\unitTest\\bundles\\bundle6db",
-                                    "C:\\github\\Pony\\PonyIndexer\\resources\\stopWords"
+                Search search = new Search( "/home/michath/Github/Pony/PonyIndexer/resources/unitTest/bundles/bundle6",
+                                    "\"/home/michath/Github/Pony/PonyIndexer/resources/stopWords"
                                      , new VectorSpaceRankingPolicy() );
 //        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
         
