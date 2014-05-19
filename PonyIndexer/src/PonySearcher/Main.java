@@ -16,14 +16,21 @@ public class Main {
     public static void main(String[] args) 
             throws IOException, FileNotFoundException, ClassNotFoundException, Exception{
         
-        if (args.length < 3){
-            System.out.println("Error: Invalid variables. Try importing these absolute paths\n"+
-                    "java -jar PonySearcher.java <DocumentCollection> <StopWords> <\"Search String\"> ");
-            System.exit(1);
-        }
-        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
-        search.submitQuery(args[2]);
-        PriorityQueue<PageRankInfo> retrieveAndRank = search.getRankTerms();
+//        if (args.length < 3){
+//            System.out.println("Error: Invalid variables. Try importing these absolute paths\n"+
+//                    "java -jar PonySearcher.java <DocumentCollection> <StopWords> <\"Search String\"> ");
+//            System.exit(1);
+//        }
+//        
+                Search search = new Search( "C:\\github\\Pony\\PonyIndexer\\resources\\unitTest\\bundles\\bundle6db",
+                                    "C:\\github\\Pony\\PonyIndexer\\resources\\stopWords"
+                                     , new VectorSpaceRankingPolicy() );
+//        Search search = new Search( args[0], args[1], new VectorSpaceRankingPolicy() );
+        
+        TestUnit.searchTermsAndResultSize(100,search);
+        
+        //search.submitQuery(args[2]);
+        //PriorityQueue<PageRankInfo> retrieveAndRank = search.getRankTerms();
                         
         
         

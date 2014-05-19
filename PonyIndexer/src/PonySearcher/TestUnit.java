@@ -17,9 +17,12 @@ import java.util.Set;
  * @author Apostolidis
  */
 public class TestUnit {
+    
     public static void searchTermsAndResultSize(int sampleSize, Search search) throws Exception{
+        
         VocabularyInfoHolder vocabularyInfoHolder = search.getVocabularyInfoHolder();
         Set<String> indexedTerms = vocabularyInfoHolder.getMap().keySet();
+       
         termsPerQuery(1, sampleSize, indexedTerms, search);
         termsPerQuery(2, sampleSize, indexedTerms, search);
         termsPerQuery(3, sampleSize, indexedTerms, search);
@@ -28,7 +31,8 @@ public class TestUnit {
     
     private static void termsPerQuery(int n, int sampleSize, Set<String> indexedTerms, Search search) throws Exception{
         Iterator<String> indexTermsIterator = indexedTerms.iterator();
-        for(int i=0; i<sampleSize; ++i){
+        for(int e=10000;e>0;--e) indexTermsIterator.next();
+        for(int i=sampleSize-1; i!=-1 ; --i){
             String query="";
             for(int termsPerQuery=0; termsPerQuery<n; ++termsPerQuery){
                 if(indexTermsIterator.hasNext()){
@@ -38,9 +42,18 @@ public class TestUnit {
                     return;
                 }
             }
+            
+            long startTime = System.currentTimeMillis();
+            //System.out.println("searching: "+query);
             search.submitQuery(query);
+            long finishTime = System.currentTimeMillis();
+            
             PriorityQueue<PageRankInfo> retrieveAndRank = search.getRankTerms();
-            System.out.println("query terms: " + n + ", results size: " + retrieveAndRank.size());
+            if(retrieveAndRank==null){
+                ++i;
+                continue;
+            }
+            System.out.println( n + "," + retrieveAndRank.size()+","+(finishTime-startTime));
         }
     }
 }

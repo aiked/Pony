@@ -25,6 +25,8 @@ public class Main {
         System.out.println("All files were intexed in " + (finishTime-startTime) + " miliseconds");
     }
      
+    //michath
+    //C:\\github\\Pony\\PonyIndexer\\resources\\unitTest\\bundles\\bundle1 C:\\github\\Pony\\PonyIndexer\\resources\\stopWords C:\\github\\Pony\\PonyIndexer\\resources\\unitTest\\bundles\\bundles
              
 //        IndexManager index = IndexManager.getInstance();
 //        index.indexer( 

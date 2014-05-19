@@ -112,7 +112,7 @@ public class TermNormalizer {
             // If character is // between 0x0021 - 0x007E
             return "eng"; // return english language
         } 
-        return null;
+        return "eng";
     }
     
     //////////////////////////////////////////
@@ -140,12 +140,13 @@ public class TermNormalizer {
         if(isDelimiter(term))
             return null;
         else{
-            lexTerm = term = termToLowerCase(term);
-            if(isTermGreek(term)){
-                term = removePunctuation(term);
-            }
-            term = stopWords.getValidTerm(term);
-            return term!=null && !term.isEmpty() ? new String[]{ stemTerm(term), lexTerm } : null;
+            return new String[]{ term, term };
+//            lexTerm = term = termToLowerCase(term);
+//            if(isTermGreek(term)){
+//                term = removePunctuation(term);
+//            }
+//            term = stopWords.getValidTerm(term);
+//            return term!=null && !term.isEmpty() ? new String[]{ stemTerm(term), lexTerm } : null;
         }
     }
         

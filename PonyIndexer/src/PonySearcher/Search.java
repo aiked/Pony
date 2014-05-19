@@ -77,10 +77,16 @@ public class Search {
         throws IOException, Exception{
 
         ArrayList<ParsedQueryTerm> parsedQueryWords = parsedQuery.parse(query);
+  
+        //System.out.println("afterparse: "+parsedQueryWords);
+        // Optimized flow.
+//        QueryOptimizer.Query optimizedQuery = queryOptimizer.optimize(parsedQueryWords);
+//        relatedQueries = optimizedQuery.getRelatedQueries();
+//        rankTerms = ranker.rankTerms( optimizedQuery.getOptimizedQuery() );
         
-        QueryOptimizer.Query optimizedQuery = queryOptimizer.optimize(parsedQueryWords);
-        relatedQueries = optimizedQuery.getRelatedQueries();
-        rankTerms = ranker.rankTerms(optimizedQuery.getOptimizedQuery());
+//        // Unoptimized flow, evaluation.
+        rankTerms = ranker.rankTerms( parsedQueryWords );
+        
     }
 
     public void setPageRankingPolicy(PageRankingPolicy pageRankingPolicy) {

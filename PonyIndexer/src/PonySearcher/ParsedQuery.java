@@ -71,9 +71,9 @@ public class ParsedQuery {
             parsedQueryWords.add(tmpWordInfo);
         }
         
-        for (ParsedQueryTerm pW : parsedQueryWords){
-            System.out.println(pW.getParsedWord()+"  "+pW.getTf()+"  "+pW.getWeight());
-        }
+//        for (ParsedQueryTerm pW : parsedQueryWords){
+//            System.out.println(pW.getParsedWord()+"  "+pW.getTf()+"  "+pW.getWeight());
+//        }
         
         return parsedQueryWords;
     }

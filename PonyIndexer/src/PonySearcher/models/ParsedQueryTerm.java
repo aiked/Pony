@@ -49,4 +49,9 @@ public class ParsedQueryTerm {
     public double getWeight(){
         return weight;
     }
+    
+    @Override
+    public String toString(){
+        return "{"+parsedWord+","+word+"}";
+    }
 }

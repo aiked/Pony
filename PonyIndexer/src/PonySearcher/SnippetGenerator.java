@@ -5,6 +5,8 @@ import Common.TermNormalizer;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,16 +34,24 @@ public class SnippetGenerator {
         }
         return snippets;
     }
+    
+    public static String generateSingle(RandomAccessFile file, String term, Long position) {
+        try {
+            return snippet(file, term, position);
+        } catch (Exception ex) {
+            return null;
+        }
+    }
    
     @SuppressWarnings("empty-statement")
-    public static String generateSingle(RandomAccessFile file, String term, Long position) throws IOException{
+    public static String snippet(RandomAccessFile file, String term, Long position) throws IOException{
         int offsetStart = S_OFFSET_START;
         int offsetEnd = S_OFFSET_END;
         if(TermNormalizer.countUTF8Stringlength(term)!=term.length()){
             offsetStart *= 2;
             offsetEnd *= 2;
         }
-        
+
         long pStart = Math.max( position-offsetStart, 0);
         // 7 is the byte length of <b></b>
         long pEnd = Math.min( position + term.length() + offsetEnd + 7, file.length() );
@@ -71,6 +81,7 @@ public class SnippetGenerator {
             // 3 is the byte length of </b>
             buffer[j]=buffer[j-4];
         }
+
         buffer[termPosEnd+3] = '<';
         buffer[termPosEnd+3+1] = '/';
         buffer[termPosEnd+3+2] = 'b';
