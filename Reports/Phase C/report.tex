@@ -98,16 +98,167 @@ Web crawler is a mining tool over the web. The purpose of this tool is to downlo
 
 \section{Evaluation}
 
+After the design and the implementation of our system we provide a evaluation
+under 3 scopes. The first two scopes are combined under section "Time \& Space
+Evaluation". The other section describes the accuracy and what are the expected
+results from the system, both in Phase A and Phase B where our optimization are
+used.
+
+\subsection{ Time \& Space Optimizations }
+
+In this section there are 8 charts and graphs to provide information on how the
+system is being evaluated under many different aspects. What we notice are the
+following. 
+
+\begin{itemize} 
+\item The size of the indexing files are almost as much size of
+the document collection we examine. Still, we believe that when the document
+collection will get even bigger the size of indexing database will not change
+that drastically.
+\item Due to changes in the implementation of Phase B the
+searching mechanism is even faster and returns better and more ordered
+documents.
+\item Even when we run the evaluations multiple times, one hundred times
+for each number of query terms times four times the minimum and maximum times
+are pretty random and are related to what the rest of the system does that 3
+ms. The average values shows how stable the system is.  
+\end{itemize}
+
 \begin{figure}[H]
     \centering
-    \includegraphics{fileNumber-size.eps}
-    \caption{ {\bf x}: Number of files {\bf y}: Indexing size in MB }
+    \includegraphics[width=4in]{docNumber-indexSize.eps}
+    \caption{ Number of document collection and their respective size of the index database. }
     \label{Query structure}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{DocSize-IndexSize.eps}
+    \caption{ Size of document collection and their respective size of the index database. }
+    \label{Query structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{docNumber-Time.eps}
+    \caption{ Size of document collection and the time it is required for indexing. }
+    \label{Query structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{docSize-Time.eps}
+    \caption{ Size of document collection and the time it is required for indexing. }
+    \label{Query structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{queryterms-timeA.eps}
+    \caption{ Length of the query and average time to search for system A. }
+    \label{Query structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{queryterms-timeB.eps}
+    \caption{ Length of the query and average time to search for system B. }
+    \label{Query structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{queryterms-returnA.eps}
+    \caption{ Length of the query and average returned documents for system A. }
+    \label{Query structure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4in]{queryterms-returnB.eps}
+    \caption{ Length of the query and average returned documents for system B. }
+    \label{Query structure}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption { {\bf System A: Times in ms for each number of terms in the query } }
+\begin{tabular}{llll}
+\# Query terms & Minimum & Average & Maximum \\
+1              & 0       & 1.32    & 11      \\
+2              & 0       & 1.68    & 10      \\
+3              & 0       & 2.38    & 17      \\
+4              & 0       & 2.95    & 17       
+\end{tabular}
+\end{table}
 
 
+\begin{table}[h]
+\centering
+\caption { {\bf System A: Number of returned documents each number of terms in the query } }
+\begin{tabular}{llll}
+\# Query terms & Minimum & Average & Maximum \\
+1              & 1       & 3.01    & 20      \\
+2              & 1       & 4.93    & 21      \\
+3              & 1       & 6.84    & 30      \\
+4              & 2       & 8.77    & 30       
+\end{tabular}
+\end{table}
 
+
+\begin{table}[h]
+\centering
+\caption { {\bf System B: Times in ms for each number of terms in the query } }
+\begin{tabular}{llll}
+\# Query terms & Minimum & Average & Maximum \\
+1              & 0       & 1.32    & 22      \\
+2              & 0       & 1.21    & 14      \\
+3              & 0       & 1.39    & 6      \\
+4              & 0       & 1.60    & 11       
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption { {\bf System B: Number of returned documents each number of terms in the query } }
+\begin{tabular}{llll}
+\# Query terms & Minimum & Average & Maximum \\
+1              & 1       & 2.85    & 23      \\
+2              & 1       & 6.04    & 24      \\
+3              & 2       & 8.59    & 36      \\
+4              & 2       & 10.49   & 36       
+\end{tabular}
+\end{table}
+
+
+\subsection{ Accuracy }
+We do our accuracy tests by implementing the following scheme. 
+\begin{enumerate}
+\item We choose randomly 20 words from the vocabulary database.
+\item For each of these words we run the UWN database and we take, randomly,
+four related words and we store it to a temporary structure. 
+\item Using all of the above words we start creating documents, we create 
+ten documents with 20 words inside each document.
+\item The words to be put at each document are chosen in this way. In the 
+first step, we choose 7 to 10 words from the vocabulary database. After this,
+for each words from the chosen above we add 0 to 3 synonyms etc inside the 
+documents.
+\item We read the documents manually, we the humans, and then we created 
+four queries with some relation to the words we read.
+\item We input the queries to the system and we observe and evaluate the
+results.
+\end{enumerate}
+
+Our findings are the following. The system in Phase A is worse in every aspect
+such as Precision, Recall and F-measure and R-Precision. Still, it shows that 
+the fallout is better from the system at Phase B. This is due to the fact that
+we use extensively the UWN database to enrich the user's seach query. The 
+weight we assign to the results of the UWN DB are static numbers and we reach 
+to the conclusion that should be adjusted, even with feedback from the user, 
+to provide more accurate results. Another point to bring up is that in order to
+evaluate the system we need a more extended description on how to evaluate a
+system and a proper common document collection to perform the evaluation with
+predefined correct answers and their defined progression as returning results.
 
 
 \section{Build instructions}
